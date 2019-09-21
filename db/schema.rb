@@ -223,7 +223,7 @@ ActiveRecord::Schema.define(version: 2019_09_21_044742) do
     t.string "start"
     t.string "stop"
     t.integer "nam_id"
-    t.integer "src"
+    t.integer "src_id"
     t.integer "clng_id"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
