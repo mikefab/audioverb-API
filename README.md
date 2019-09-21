@@ -39,7 +39,7 @@ rails g model Nam nam:string:index lng_id:integer:index duration:string src_id:i
 
 rails g model Cap cap:string:index lng_id:integer:index num:integer:index start:string:index stop:string nam_id:integer:index src_id:integer:index wcount:integer ccount:integer
 
-rails g model Sub sub:string cap_id:integer:index lng_id:integer num:integer start:string stop:string nam_id:integer src:integer clng_id:integer:index
+rails g model Sub sub:string cap_id:integer:index lng_id:integer num:integer start:string stop:string nam_id:integer src_id:integer clng_id:integer:index
 
 rails g model LngsVocs lng_id:integer:index voc_id:integer:index seen:integer olng_id:integer:index —no-timestamps –no-id
 
