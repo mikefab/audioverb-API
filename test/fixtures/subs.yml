@@ -1,0 +1,23 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  sub: MyString
+  cap_id: 1
+  lng_id: 1
+  num: 1
+  start: MyString
+  stop: MyString
+  nam_id: 1
+  src: 1
+  clng_id: 1
+
+two:
+  sub: MyString
+  cap_id: 1
+  lng_id: 1
+  num: 1
+  start: MyString
+  stop: MyString
+  nam_id: 1
+  src: 1
+  clng_id: 1

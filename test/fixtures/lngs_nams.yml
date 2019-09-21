@@ -1,0 +1,9 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  lng_id: 1
+  nam_id: 1
+
+two:
+  lng_id: 1
+  nam_id: 1

@@ -1,0 +1,11 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  cla_id: 1
+  lng_id: 1
+  o_lng: 1
+
+two:
+  cla_id: 1
+  lng_id: 1
+  o_lng: 1

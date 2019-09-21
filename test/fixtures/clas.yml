@@ -1,0 +1,17 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  cla: MyString
+  lng_id: 1
+  mood_id: 1
+  tense_id: 1
+  tiemo_id: 1
+  verb_id: 1
+
+two:
+  cla: MyString
+  lng_id: 1
+  mood_id: 1
+  tense_id: 1
+  tiemo_id: 1
+  verb_id: 1

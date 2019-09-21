@@ -1,0 +1,9 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  cap_id: 1
+  cla: 
+
+two:
+  cap_id: 1
+  cla: 

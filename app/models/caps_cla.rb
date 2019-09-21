@@ -1,0 +1,2 @@
+class CapsCla < ApplicationRecord
+end

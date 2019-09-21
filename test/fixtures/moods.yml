@@ -1,0 +1,11 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  mood: MyString
+  lng_id: 1
+  priority: 1
+
+two:
+  mood: MyString
+  lng_id: 1
+  priority: 1

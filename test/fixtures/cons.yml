@@ -1,0 +1,19 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  con: MyString
+  con_id: 1
+  verb_id: 1
+  mood_id: 1
+  tiempo_id: 1
+  lng_id: 1
+  priority: 1
+
+two:
+  con: MyString
+  con_id: 1
+  verb_id: 1
+  mood_id: 1
+  tiempo_id: 1
+  lng_id: 1
+  priority: 1

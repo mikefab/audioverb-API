@@ -1,0 +1,2 @@
+class ClasLng < ApplicationRecord
+end

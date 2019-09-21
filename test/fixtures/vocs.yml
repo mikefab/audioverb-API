@@ -1,0 +1,17 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  voc: MyString
+  freq: 1.5
+  gram: 1
+  lng_id: 1
+  rank: 1
+  raw: 1
+
+two:
+  voc: MyString
+  freq: 1.5
+  gram: 1
+  lng_id: 1
+  rank: 1
+  raw: 1

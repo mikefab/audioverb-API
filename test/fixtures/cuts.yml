@@ -1,0 +1,13 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  num: 1
+  start: MyString
+  stop: MyString
+  cap_id: 1
+
+two:
+  num: 1
+  start: MyString
+  stop: MyString
+  cap_id: 1
