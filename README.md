@@ -80,4 +80,6 @@ mysql -u root audioverb_development -e "ALTER TABLE defs CONVERT TO CHARACTER SE
 In console: Lng.seed_data()
 
 bundle exec rake import_free_dictionary –trace
-bundle exec rake import_verbs language=spanish –trace
+bundle exec rake import_verbs language=spanish
+bundle exec rake import_verbs language=spanish
+bundle exec rake create_clauses language=spa

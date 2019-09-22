@@ -8,7 +8,7 @@ class CreateSubs < ActiveRecord::Migration[6.0]
       t.string :start
       t.string :stop
       t.integer :nam_id
-      t.integer :src
+      t.integer :src_id
       t.integer :clng_id
 
       t.timestamps

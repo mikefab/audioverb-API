@@ -56,7 +56,7 @@ ActiveRecord::Schema.define(version: 2019_09_21_044742) do
     t.integer "lng_id"
     t.integer "mood_id"
     t.integer "tense_id"
-    t.integer "tiemo_id"
+    t.integer "tiempo_id"
     t.integer "verb_id"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
@@ -67,12 +67,12 @@ ActiveRecord::Schema.define(version: 2019_09_21_044742) do
   create_table "clas_lngs", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.integer "cla_id"
     t.integer "lng_id"
-    t.integer "o_lng"
+    t.integer "olng_id"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.index ["cla_id"], name: "index_clas_lngs_on_cla_id"
     t.index ["lng_id"], name: "index_clas_lngs_on_lng_id"
-    t.index ["o_lng"], name: "index_clas_lngs_on_o_lng"
+    t.index ["olng_id"], name: "index_clas_lngs_on_olng_id"
   end
 
   create_table "cons", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci", force: :cascade do |t|

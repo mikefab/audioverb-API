@@ -50,3 +50,37 @@ task :import_movies => [:environment] do
     end
   end
 end
+#imports caps (dotsub,lyricstraining, movies and tv)
+task :assign_languages_to_names => [:environment] do #run after importing caps/subs
+  print "about to truncate lngs_nams\n"
+  ActiveRecord::Migration.execute("truncate lngs_nams;")
+  nl=Hash.new()
+  c=0
+  print "about to run through each nam and its lngs\n"
+  ActiveRecord::Migration.suppress_messages do
+    Nam.all.each do |n|
+      nl["#{n.id}-#{n.lng_id}"]=1
+      ActiveRecord::Migration.execute("select lng_id from subs where nam_id=#{n.id} group by lng_id;").each do |s|
+        c+=1
+        print "#{c} #{n.id} #{s[0]}\n" if c%100 == 2
+        nl["#{n.id}-#{s[0]}"]=1
+      end
+    end
+  end #end suppress
+  print "#{nl.size} ....\n"
+  count=0
+  ActiveRecord::Migration.suppress_messages do
+    nl.each do |k,v|
+      count+=1
+      print "inserting into lngs nams: count:#{count} #{nam_id}\n" if count%2==500
+      (nam_id,lng_id) = k.split(/-/)
+    #  print "#{lng_id} --- #{nam_id}\n"
+      ActiveRecord::Migration.execute("insert into lngs_nams(lng_id,nam_id)values(#{lng_id},#{nam_id})")
+#      print "#{name_id} #{language_id}\n"
+    end
+  end
+  print "done with lng_nam\n"
+#  if ENV['RAILS_ENV'].match(/production/) then
+#    Rails.cache.clear()
+#  end
+end

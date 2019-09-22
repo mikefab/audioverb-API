@@ -5,7 +5,7 @@ class CreateClas < ActiveRecord::Migration[6.0]
       t.integer :lng_id
       t.integer :mood_id
       t.integer :tense_id
-      t.integer :tiemo_id
+      t.integer :tiempo_id
       t.integer :verb_id
 
       t.timestamps

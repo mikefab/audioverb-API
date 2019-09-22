@@ -201,6 +201,7 @@ task :import_verbs => [:environment] do
   end
 
   stored_conjugations=Hash.new()
+  createdAt = Time.now.strftime('%Y-%m-%d %H:%M:%S')
   ActiveRecord::Migration.suppress_messages do
      cmktp.each do |k,v|
        if ENV['language']=="spanish"
@@ -212,7 +213,7 @@ task :import_verbs => [:environment] do
          verb_id    = stored_verbs[v]
 
       (conjugation,mood,tiempo,tense) = k.split("::")
-      createdAt = Time.now.strftime('%Y-%m-%d %H:%M:%S')
+
       ActiveRecord::Migration.execute("insert into cons (con,created_at, updated_at,verb_id,mood_id,tiempo_id,tense_id,lng_id,pronoun) values('#{conjugation}', '#{createdAt}', '#{createdAt}',#{verb_id},#{mood_id},#{tiempo_id},#{tense_id},#{language_id},\"#{pronoun || '0'}\");") if ENV['language']=="spanish"
     else
 #    print "#{k}\n"
@@ -223,7 +224,7 @@ task :import_verbs => [:environment] do
       (conjugation,mood,tense) = k.split("::")
       temp_conjugation = conjugation.gsub(/'/, "\\\\'")
       if !conjugation.match(/<img src/) then
-      ActiveRecord::Migration.execute("insert into cons (con,verb_id,mood_id,tense_id,lng_id,pronoun) values('#{temp_conjugation}',#{verb_id},#{mood_id},#{tense_id},#{language_id},\"#{pronoun}\");") if ENV['language']=="french"
+      ActiveRecord::Migration.execute("insert into cons (con,created_at, updated_at, verb_id,mood_id,tense_id,lng_id,pronoun) values('#{temp_conjugation}','#{createdAt}', '#{createdAt}',#{verb_id},#{mood_id},#{tense_id},#{language_id},\"#{pronoun}\");") if ENV['language']=="french"
     end
     end
 
