@@ -1,2 +1,0 @@
-class ClasLng < ApplicationRecord
-end

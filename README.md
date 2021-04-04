@@ -83,3 +83,5 @@ bundle exec rake import_free_dictionary –trace
 bundle exec rake import_verbs language=spanish
 bundle exec rake import_verbs language=spanish
 bundle exec rake create_clauses language=spa
+
+rails g controller home

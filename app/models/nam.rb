@@ -50,7 +50,8 @@ class Nam < ApplicationRecord
 
   def get_caps_by_search(search)
     #self.caps.search(search, :match_mode=>:phrase, :per_page=>3)
-    self.caps.search('"'+ search + '"', :per_page => 25, :match_mode => :extended)
+    #self.caps.search('"'+ search + '"', :per_page => 25, :match_mode => :extended)
+    self.caps.search('"'+ search + '"', :per_page => 25)
   end
 
   def self.to_flare(media, term)
