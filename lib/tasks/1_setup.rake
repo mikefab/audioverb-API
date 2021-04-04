@@ -214,7 +214,7 @@ task :import_verbs => [:environment] do
 
       (conjugation,mood,tiempo,tense) = k.split("::")
 
-      ActiveRecord::Migration.execute("insert into cons (con,created_at, updated_at,verb_id,mood_id,tiempo_id,tense_id,lng_id,pronoun) values('#{conjugation}', '#{createdAt}', '#{createdAt}',#{verb_id},#{mood_id},#{tiempo_id},#{tense_id},#{language_id},\"#{pronoun || '0'}\");") if ENV['language']=="spanish"
+      ActiveRecord::Migration.execute("insert into cons (con, created_at, updated_at,verb_id,mood_id,tiempo_id,tense_id,lng_id,pronoun) values('#{conjugation}', '#{createdAt}', '#{createdAt}',#{verb_id},#{mood_id},#{tiempo_id},#{tense_id},#{language_id},\"#{pronoun || '0'}\");") if ENV['language']=="spanish"
     else
 #    print "#{k}\n"
          (conjugation,mood,tense,pronoun) = k.split("::")
