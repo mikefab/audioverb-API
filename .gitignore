@@ -30,3 +30,8 @@ database.yml
 yarn-debug.log*
 .yarn-integrity
 config/database.yml
+
+
+public/audio/
+python@2.rb
+db/sphinx/
