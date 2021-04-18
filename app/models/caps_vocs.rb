@@ -1,0 +1,2 @@
+class CapsVocs < ApplicationRecord
+end

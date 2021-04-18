@@ -8,7 +8,6 @@ class CapsController < ApplicationController
     else
       nam = Nam.where(nam: params[:nam].gsub(/_/,' ')).first
       puts nam.id
-      puts 'xxxx'
     end
     render json: Cap.where(
       nam_id: nam.id,

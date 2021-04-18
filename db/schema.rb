@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_04_18_011134) do
+ActiveRecord::Schema.define(version: 2021_04_18_015827) do
 
   create_table "acts", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.integer "user_id"
@@ -49,6 +49,13 @@ ActiveRecord::Schema.define(version: 2021_04_18_011134) do
     t.integer "cla_id"
     t.index ["cap_id"], name: "index_caps_clas_on_cap_id"
     t.index ["cla_id"], name: "index_caps_clas_on_cla_id"
+  end
+
+  create_table "caps_vocs", id: false, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.integer "cap_id"
+    t.integer "voc_id"
+    t.index ["cap_id"], name: "index_caps_vocs_on_cap_id"
+    t.index ["voc_id"], name: "index_caps_vocs_on_voc_id"
   end
 
   create_table "clas", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci", force: :cascade do |t|
