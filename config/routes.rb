@@ -9,6 +9,7 @@ Rails.application.routes.draw do
       end
     end
   get 'nams/'                => 'nams#all'
+  get 'search/:lng/:media/:search'                    => 'nams#search'
 #  get 'tenses/:language/:media'                => 'home#tenses'
   get 'tenses/:language'                => 'home#tenses'
   get 'tense/:tense'                           => 'home#tense'
