@@ -9,6 +9,7 @@ Rails.application.routes.draw do
       end
     end
   get 'nams/'                => 'nams#all'
+  get 'caps/:nam/:num'                         => 'caps#cap_by_nam_num'
   get 'search/:lng/:media/:search'                    => 'nams#search'
 #  get 'tenses/:language/:media'                => 'home#tenses'
   get 'tenses/:language'                => 'home#tenses'
