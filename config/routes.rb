@@ -8,7 +8,7 @@ Rails.application.routes.draw do
         resources :items
       end
     end
-  get 'nams'                => 'nams#all'
+  get 'nams/'                => 'nams#all'
 #  get 'tenses/:language/:media'                => 'home#tenses'
   get 'tenses/:language'                => 'home#tenses'
   get 'tense/:tense'                           => 'home#tense'

@@ -35,3 +35,7 @@ config/database.yml
 public/audio/
 python@2.rb
 db/sphinx/
+config/development.sphinx.conf
+config/development.sphinx-bac.conf
+config/thinking_sphinx.yml
+
