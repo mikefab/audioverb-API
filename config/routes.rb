@@ -16,4 +16,5 @@ Rails.application.routes.draw do
   get 'tense/:tense'                           => 'home#tense'
   get 'search/caps/:lng/:search/:nam'          => 'nams#search_caps_nam'
   get 'combine'                                => 'orders#combine' # for concating png and mp3 files on the fly
+  get 'combine/:format/:source/:name/:start/:stop.:extenstion' => 'orders#combine' # for concating png and mp3 files on the fly
 end
