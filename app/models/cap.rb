@@ -19,11 +19,13 @@ class Cap < ApplicationRecord
    end
 
    def start
-     to_point_five((super.to_f - self.nam.pad_start.to_f))
+     # to_point_five((super.to_f - self.nam.pad_start.to_f))
+     to_point_five((super.to_f - 0.5))
    end
 
    def stop
-      to_point_five((super.to_f + self.nam.pad_end.to_f))
+    #  to_point_five((super.to_f + self.nam.pad_end.to_f))
+    to_point_five((super.to_f + 0.5))
    end
 
    def all_subs
