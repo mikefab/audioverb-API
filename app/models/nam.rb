@@ -64,7 +64,16 @@ class Nam < ApplicationRecord
     h = {name: 'flare', size: 1000, children: []}
     dramas = {}
     nams.each do |n|
-      caps = n.get_caps_by_search(term).map{|i| {name: i.nam,id: i.id, cap: i.cap, size: (i.cap.length * 1000), num: i.num, nam: i.nam.nam.gsub(/\s+/, '.')}}
+      caps = n.get_caps_by_search(term).map{ |i| {
+        nam: i.nam.nam.gsub(/\s+/, '.'),
+        num: i.num,
+        start: i.start,
+        stop: i.stop,
+        name: i.nam,id: i.id,
+        cap: i.cap,
+        size: (i.cap.length * 1000)
+      }
+    }
       # if my_match = /(.+)\.(\d+_\d+x\d+)/.match(n.nam)
       #   unless !!dramas[my_match[1]]
       #     dramas[my_match[1]] = { nam: my_match[1], size: 1000, children: [{nam: my_match[2], size: (caps.length * 1000), children: caps}]}
