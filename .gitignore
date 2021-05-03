@@ -38,4 +38,6 @@ db/sphinx/
 config/development.sphinx.conf
 config/development.sphinx-bac.conf
 config/thinking_sphinx.yml
-
+public/mp3/
+lib/tools/text_files/
+lib/text_files/
