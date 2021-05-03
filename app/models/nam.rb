@@ -54,13 +54,14 @@ class Nam < ApplicationRecord
     self.caps.search('"'+ search + '"', :per_page => 25)
   end
 
-  def self.to_flare(media, term)
-    if media == 'all'
-      nams = Nam.search(term)
-    else
-      nams = Nam.where(nam: media.gsub(/_/, ' '))
-    end
-
+  def self.to_flare(term, lng_id)
+    # if media == 'all'
+    #   nams = Nam.search(term)
+    # else
+    #   # nams = Nam.where(nam: media.gsub(/_/, ' '))
+    #   nams = Nam.where(lng_id: 931)
+    # end
+    nams = Nam.where(lng_id: lng_id)
     h = {name: 'flare', size: 1000, children: []}
     dramas = {}
     nams.each do |n|
