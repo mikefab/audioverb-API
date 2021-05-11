@@ -1,0 +1,35 @@
+version: '3'
+services:
+  web:
+    build: .
+    command: bundle exec rails s -p 5000 -b '0.0.0.0'
+    volumes:
+      - .:/app:cached
+    ports:
+      - 5000:5000
+    environment:
+      EDITOR: vim
+      MYSQL_USER: root
+      MYSQL_ROOT_PASSWORD: password
+    depends_on:
+      - db
+    tty: true
+    stdin_open: true
+  db:
+    image: mysql:5.7.29
+    volumes:
+      - db-volume:/var/lib/mysql
+    environment:
+      MYSQL_ALLOW_EMPTY_PASSWORD: 'yes'
+      MYSQL_USER: root
+      MYSQL_ROOT_PASSWORD: password
+
+  tbls:
+    image: k1low/tbls:latest
+    volumes:
+      - .:/work
+    environment:
+      TBLS_DSN: mysql://root:@db:3306/app_development
+      TBLS_DOC_PATH: docs/tables
+volumes:
+  db-volume:

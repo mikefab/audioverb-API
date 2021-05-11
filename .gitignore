@@ -6,7 +6,6 @@
 .DS_Store
 # Ignore bundler config.
 /.bundle
-database.yml
 # Ignore all logfiles and tempfiles.
 /log/*
 /tmp/*
@@ -29,15 +28,14 @@ database.yml
 /yarn-error.log
 yarn-debug.log*
 .yarn-integrity
-config/database.yml
 
 
 public/audio/
 python@2.rb
 db/sphinx/
-config/development.sphinx.conf
-config/development.sphinx-bac.conf
-config/thinking_sphinx.yml
+#config/development.sphinx.conf
+#config/development.sphinx-bac.conf
+#config/thinking_sphinx.yml
 public/mp3/
 lib/tools/text_files/
 lib/text_files/

@@ -2,8 +2,8 @@
 # of editing this file, please use the migrations feature of Active Record to
 # incrementally modify your database, and then regenerate this schema definition.
 #
-# This file is the source Rails uses to define your schema when running `rails
-# db:schema:load`. When creating a new database, `rails db:schema:load` tends to
+# This file is the source Rails uses to define your schema when running `bin/rails
+# db:schema:load`. When creating a new database, `bin/rails db:schema:load` tends to
 # be faster and is potentially less error prone than running all of your
 # migrations from scratch. Old migrations may fail to apply correctly if those
 # migrations use external dependencies or application code.
@@ -12,7 +12,7 @@
 
 ActiveRecord::Schema.define(version: 2021_04_18_015827) do
 
-  create_table "acts", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci", force: :cascade do |t|
+  create_table "acts", charset: "utf8mb4", force: :cascade do |t|
     t.integer "user_id"
     t.string "user_name"
     t.integer "cap_id"
@@ -24,7 +24,7 @@ ActiveRecord::Schema.define(version: 2021_04_18_015827) do
     t.index ["user_id"], name: "index_acts_on_user_id"
   end
 
-  create_table "caps", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci", force: :cascade do |t|
+  create_table "caps", charset: "utf8mb4", force: :cascade do |t|
     t.string "cap"
     t.integer "lng_id"
     t.integer "num"
@@ -44,21 +44,21 @@ ActiveRecord::Schema.define(version: 2021_04_18_015827) do
     t.index ["start"], name: "index_caps_on_start"
   end
 
-  create_table "caps_clas", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci", force: :cascade do |t|
+  create_table "caps_clas", charset: "utf8mb4", force: :cascade do |t|
     t.integer "cap_id"
     t.integer "cla_id"
     t.index ["cap_id"], name: "index_caps_clas_on_cap_id"
     t.index ["cla_id"], name: "index_caps_clas_on_cla_id"
   end
 
-  create_table "caps_vocs", id: false, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci", force: :cascade do |t|
+  create_table "caps_vocs", id: false, charset: "utf8mb4", force: :cascade do |t|
     t.integer "cap_id"
     t.integer "voc_id"
     t.index ["cap_id"], name: "index_caps_vocs_on_cap_id"
     t.index ["voc_id"], name: "index_caps_vocs_on_voc_id"
   end
 
-  create_table "clas", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci", force: :cascade do |t|
+  create_table "clas", charset: "utf8mb4", force: :cascade do |t|
     t.string "cla"
     t.integer "lng_id"
     t.integer "mood_id"
@@ -71,7 +71,7 @@ ActiveRecord::Schema.define(version: 2021_04_18_015827) do
     t.index ["lng_id"], name: "index_clas_on_lng_id"
   end
 
-  create_table "clas_lngs", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci", force: :cascade do |t|
+  create_table "clas_lngs", charset: "utf8mb4", force: :cascade do |t|
     t.integer "cla_id"
     t.integer "lng_id"
     t.integer "olng_id"
@@ -82,7 +82,7 @@ ActiveRecord::Schema.define(version: 2021_04_18_015827) do
     t.index ["olng_id"], name: "index_clas_lngs_on_olng_id"
   end
 
-  create_table "cons", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci", force: :cascade do |t|
+  create_table "cons", charset: "utf8mb4", force: :cascade do |t|
     t.string "con"
     t.integer "tense_id"
     t.integer "verb_id"
@@ -102,7 +102,7 @@ ActiveRecord::Schema.define(version: 2021_04_18_015827) do
     t.index ["verb_id"], name: "index_cons_on_verb_id"
   end
 
-  create_table "cuts", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci", force: :cascade do |t|
+  create_table "cuts", charset: "utf8mb4", force: :cascade do |t|
     t.integer "num"
     t.string "start"
     t.string "stop"
@@ -114,7 +114,7 @@ ActiveRecord::Schema.define(version: 2021_04_18_015827) do
     t.index ["start"], name: "index_cuts_on_start"
   end
 
-  create_table "defs", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+  create_table "defs", charset: "utf8mb4", force: :cascade do |t|
     t.integer "kanji_id"
     t.integer "entry_id"
     t.text "def"
@@ -132,14 +132,14 @@ ActiveRecord::Schema.define(version: 2021_04_18_015827) do
     t.index ["rank"], name: "index_defs_on_rank"
   end
 
-  create_table "entries", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+  create_table "entries", charset: "utf8mb4", force: :cascade do |t|
     t.integer "kanji_id"
     t.string "entry"
     t.index ["entry"], name: "index_entries_on_entry"
     t.index ["kanji_id"], name: "index_entries_on_kanji_id"
   end
 
-  create_table "lasts", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci", force: :cascade do |t|
+  create_table "lasts", charset: "utf8mb4", force: :cascade do |t|
     t.integer "num"
     t.string "kind"
     t.string "bench"
@@ -147,21 +147,21 @@ ActiveRecord::Schema.define(version: 2021_04_18_015827) do
     t.datetime "updated_at", precision: 6, null: false
   end
 
-  create_table "lngs", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci", force: :cascade do |t|
+  create_table "lngs", charset: "utf8mb4", force: :cascade do |t|
     t.string "lng"
     t.string "cod"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
   end
 
-  create_table "lngs_nams", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci", force: :cascade do |t|
+  create_table "lngs_nams", charset: "utf8mb4", force: :cascade do |t|
     t.integer "lng_id"
     t.integer "nam_id"
     t.index ["lng_id"], name: "index_lngs_nams_on_lng_id"
     t.index ["nam_id"], name: "index_lngs_nams_on_nam_id"
   end
 
-  create_table "lngs_vocs", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci", force: :cascade do |t|
+  create_table "lngs_vocs", charset: "utf8mb4", force: :cascade do |t|
     t.integer "lng_id"
     t.integer "voc_id"
     t.integer "seen"
@@ -173,7 +173,7 @@ ActiveRecord::Schema.define(version: 2021_04_18_015827) do
     t.index ["voc_id"], name: "index_lngs_vocs_on_voc_id"
   end
 
-  create_table "moods", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci", force: :cascade do |t|
+  create_table "moods", charset: "utf8mb4", force: :cascade do |t|
     t.string "mood"
     t.integer "lng_id"
     t.integer "priority"
@@ -184,7 +184,7 @@ ActiveRecord::Schema.define(version: 2021_04_18_015827) do
     t.index ["priority"], name: "index_moods_on_priority"
   end
 
-  create_table "nams", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci", force: :cascade do |t|
+  create_table "nams", charset: "utf8mb4", force: :cascade do |t|
     t.string "nam"
     t.integer "lng_id"
     t.string "duration"
@@ -206,14 +206,14 @@ ActiveRecord::Schema.define(version: 2021_04_18_015827) do
     t.index ["upldr"], name: "index_nams_on_upldr"
   end
 
-  create_table "nams_vocs", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci", force: :cascade do |t|
+  create_table "nams_vocs", charset: "utf8mb4", force: :cascade do |t|
     t.integer "nam_id"
     t.integer "voc_id"
     t.index ["nam_id"], name: "index_nams_vocs_on_nam_id"
     t.index ["voc_id"], name: "index_nams_vocs_on_voc_id"
   end
 
-  create_table "srcs", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci", force: :cascade do |t|
+  create_table "srcs", charset: "utf8mb4", force: :cascade do |t|
     t.string "src"
     t.integer "lng_id"
     t.string "ser"
@@ -224,7 +224,7 @@ ActiveRecord::Schema.define(version: 2021_04_18_015827) do
     t.index ["src"], name: "index_srcs_on_src"
   end
 
-  create_table "subs", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci", force: :cascade do |t|
+  create_table "subs", charset: "utf8mb4", force: :cascade do |t|
     t.string "sub"
     t.integer "cap_id"
     t.integer "lng_id"
@@ -240,7 +240,7 @@ ActiveRecord::Schema.define(version: 2021_04_18_015827) do
     t.index ["clng_id"], name: "index_subs_on_clng_id"
   end
 
-  create_table "tenses", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci", force: :cascade do |t|
+  create_table "tenses", charset: "utf8mb4", force: :cascade do |t|
     t.string "tense"
     t.integer "mood_id"
     t.integer "tiempo_id"
@@ -255,7 +255,7 @@ ActiveRecord::Schema.define(version: 2021_04_18_015827) do
     t.index ["tiempo_id"], name: "index_tenses_on_tiempo_id"
   end
 
-  create_table "tiempos", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci", force: :cascade do |t|
+  create_table "tiempos", charset: "utf8mb4", force: :cascade do |t|
     t.string "tiempo"
     t.integer "lng_id"
     t.integer "priority"
@@ -266,7 +266,7 @@ ActiveRecord::Schema.define(version: 2021_04_18_015827) do
     t.index ["tiempo"], name: "index_tiempos_on_tiempo"
   end
 
-  create_table "verbs", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci", force: :cascade do |t|
+  create_table "verbs", charset: "utf8mb4", force: :cascade do |t|
     t.string "verb"
     t.integer "lng_id"
     t.datetime "created_at", precision: 6, null: false
@@ -275,7 +275,7 @@ ActiveRecord::Schema.define(version: 2021_04_18_015827) do
     t.index ["verb"], name: "index_verbs_on_verb"
   end
 
-  create_table "vocs", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci", force: :cascade do |t|
+  create_table "vocs", charset: "utf8mb4", force: :cascade do |t|
     t.string "voc"
     t.float "freq"
     t.integer "gram"

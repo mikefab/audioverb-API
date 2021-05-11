@@ -1,5 +1,10 @@
 #encoding: utf-8
 
+#You should just have to do this once upon project creation
+task :add_languages => [:environment] do
+  Lng.seed_data
+end
+
 #rake import_verbs language=spanish --trace
 #rake import_verbs language=french --trace
 task :import_verbs => [:environment] do
