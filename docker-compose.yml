@@ -9,8 +9,8 @@ services:
       - 5000:5000
     environment:
       EDITOR: vim
-      MYSQL_USER: root
-      MYSQL_ROOT_PASSWORD: password
+      MYSQL_USER:
+      MYSQL_ROOT_PASSWORD:
     depends_on:
       - db
     tty: true
@@ -20,16 +20,16 @@ services:
     volumes:
       - db-volume:/var/lib/mysql
     environment:
-      MYSQL_ALLOW_EMPTY_PASSWORD: 'yes'
-      MYSQL_USER: root
-      MYSQL_ROOT_PASSWORD: password
+      MYSQL_ALLOW_EMPTY_PASSWORD: 'no'
+      MYSQL_USER:
+      MYSQL_ROOT_PASSWORD:
 
   tbls:
     image: k1low/tbls:latest
     volumes:
       - .:/work
     environment:
-      TBLS_DSN: mysql://root:@db:3306/app_development
+      TBLS_DSN:
       TBLS_DOC_PATH: docs/tables
 volumes:
   db-volume:
