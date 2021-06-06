@@ -32,6 +32,56 @@ class Cap < ApplicationRecord
      self.subs << self.sub
    end
 
+   def next
+     Cap.where("id > ?", id).order("id ASC").first || Cap.first
+   end
+
+   def previous
+     Cap.where("id < ?", id).order("id DESC").first || Cap.last
+   end
+
+   def group(num_records)
+     num_records = num_records ? num_records : 3
+     if num_records > 10 then
+       num_records = 5
+     end
+     def padGroup(node, target_num, direction, times=num_records, ary=[], index=0)
+       if index === times or wrongDirection(direction, target_num, node.num)
+         return ary
+       else
+         index+=1
+         if direction === 1
+           ary.push(node)
+         else
+           ary = [node] + ary
+         end
+
+         return padGroup(
+           direction ===1 ? node.next : node.previous,
+           target_num,
+           direction,
+           times,
+           ary,
+           index)
+       end
+       return ary
+     end
+
+     def wrongDirection(direction, target_num, current_num)
+       if direction === 1 && target_num > current_num
+         return true
+       end
+       if direction === 0 && target_num < current_num
+         return true
+       end
+      return false
+     end
+
+     ary = padGroup(self, self.num, 0, num_records)
+     padGroup(self, self.num, 1, num_records, ary).uniq!
+   end
+
+
    def get_array_of_compound_words(sentence, entries)
      sentence = sentence.split(//);
      h_o_e    = Hash.new

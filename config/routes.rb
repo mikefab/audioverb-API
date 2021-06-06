@@ -10,12 +10,13 @@ Rails.application.routes.draw do
     end
   get 'nams/'                => 'nams#all'
   get 'caps/:nam/:num'                         => 'caps#cap_by_nam_num'
-  get 'search/:lng/:media/:search'                    => 'nams#search_by_nam'
+  get 'caps/:nam/:num(/:num_records)'          => 'caps#cap_by_nam_num_group'
+  get 'search/:lng/:media/:search'             => 'nams#search_by_nam'
   get 'search/:lng/:search'                    => 'nams#search'
 #  get 'tenses/:language/:media'                => 'home#tenses'
   get 'tenses/:language'                => 'home#tenses'
   get 'tense/:tense'                           => 'home#tense'
-  get 'tense/:tense/verb/:verb'               => 'home#conjugation'
+  get 'tense/:tense/verb/:verb'                => 'home#conjugation'
   get 'search/caps/:lng/:search/:nam'          => 'nams#search_caps_nam'
   get 'combine'                                => 'orders#combine' # for concating png and mp3 files on the fly
   get 'combine/:format/:source/:name/:start/:stop.:extenstion' => 'orders#combine' # for concating png and mp3 files on the fly
