@@ -32,6 +32,7 @@ COPY . .
 COPY ./config/thinking_sphinx.yml ./config/thinking_sphinx.yml
 
 RUN bundle exec rails assets:precompile
+RUN bundle exec rails dev:cache
 
 
 RUN rm -f /app/tmp/pids/server.pid
