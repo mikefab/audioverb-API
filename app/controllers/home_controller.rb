@@ -28,14 +28,16 @@ class HomeController < ApplicationController
     tense_id = Tense.where(tense: params[:tense]).first.id
     verb_id = Verb.where(verb: params[:verb]).first.id
     conjugations = Cla.where(tense_id: tense_id, verb_id: verb_id)
-    if Rails.cache.exist?("conjugation-#{params[:conjugation]}")
-      render json: Rails.cache.read("conjugation-#{params[:conjugation]}")
-    else
-      #verbs = Tense.return_tense_verbs(Tense.where(tense: "#{params[:tense]}").first.id, englishId)
-      render json: Rails.cache.fetch("conjugation-#{params[:conjugation]}", :expires_in => 3.days) {
-        conjugations.map{ |e|  e[:cla]}
+    render json: conjugations.map{ |e|  e[:cla]}
 
-      }
-    end
+    #if Rails.cache.exist?("conjugation-#{params[:conjugation]}")
+    #  render json: Rails.cache.read("conjugation-#{params[:conjugation]}")
+    #else
+    #  #verbs = Tense.return_tense_verbs(Tense.where(tense: "#{params[:tense]}").first.id, englishId)
+    #  render json: Rails.cache.fetch("conjugation-#{params[:conjugation]}", :expires_in => 3.days) {
+    #    conjugations.map{ |e|  e[:cla]}
+
+    #  }
+    #end
   end
 end
