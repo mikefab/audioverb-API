@@ -54,6 +54,25 @@ class Nam < ApplicationRecord
     self.caps.search('"'+ search + '"', :per_page => 25)
   end
 
+  def self.to_flare_single(nam, term)
+    nam = Nam.find_by_nam(nam)
+    h = {name: 'flare', size: 1000, children: []}
+    caps = nam.get_caps_by_search(term).map { |i| {
+        nam: i.nam.nam.gsub(/\s+/, '.'),
+        num: i.num,
+        start: i.start,
+        stop: i.stop,
+        name: i.nam,id: i.id,
+        cap: i.cap,
+        size: (i.cap.length * 1000)
+      }
+    }
+
+    h[:children].push({name: nam.nam, size: (caps.length * 100) , children: caps}) if caps.length  > 0
+
+    # dramas.keys.each{|k| h[:children].push dramas[k]}
+    h
+  end
   def self.to_flare(term, lng_id)
     # if media == 'all'
     #   nams = Nam.search(term)

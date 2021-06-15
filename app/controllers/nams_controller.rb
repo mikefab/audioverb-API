@@ -4,14 +4,15 @@ class NamsController < ApplicationController
     render json: Nam.all
   end
   # respond_to :json
-  def search_by_movie
+  def search_by_nam
     #flare = Nam.to_flare(params[:search])
     media  = params[:media]
     search = params[:search]
+
     if Rails.cache.exist?("nam-search-#{media}-#{search}")
       render json: Rails.cache.read("nam-search-#{media}-#{search}")
     else
-      render json: Rails.cache.fetch("nam-search-#{media}-#{search}", :expires_in => 3.days){ Nam.to_flare(media, search)}
+      render json: Rails.cache.fetch("nam-search-#{media}-#{search}", :expires_in => 3.days){ Nam.to_flare_single(media, search)}
     end
     #render json: flare #Nam.search("\"#{params[:search]}\"").to_json(:search => params[:search])
   end
