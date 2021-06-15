@@ -45,7 +45,7 @@ class Nam < ApplicationRecord
   end
 
   def last_cap_stop
-    self.caps.last.stop
+    self.caps.last
   end
 
   def get_caps_by_search(search)
