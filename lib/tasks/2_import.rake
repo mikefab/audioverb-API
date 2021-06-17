@@ -3,6 +3,9 @@
 # RAILS_ENV=development rake import_movies file=my.life.as.mcdull language=chi_hans --trace
 # RAILS_ENV=development rake import_movies file=the.tibetan.dog language=chi_hans --trace
 # RAILS_ENV=development rake import_movies file=el.clan language=spa --trace
+# RAILS_ENV=development rake import_movies file=relatos.salvajes language=spa --trace
+# RAILS_ENV=development rake import_movies file=nueve.reinas language=spa --trace
+# RAILS_ENV=development rake import_movies file=maria.llena.de.gracia language=spa --trace
 task :import_movies => [:environment] do
   main_language_id = Lng.where(%Q/cod="#{ENV['language']}"/).first.id
 

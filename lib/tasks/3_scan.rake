@@ -5,6 +5,25 @@ task :create_clauses => [:environment] do
   start       = ENV['start'] || 0 #for starting in the middle of caps
   cla_hash    = Hash.new()
 
+  ignore_words = {
+    "abajo" => 1,
+    "anillo" => 1,
+    "baja" => 1,
+    "bajo" => 1,
+    "cambio" => 1,
+    "caso" => 1,
+    "como" => 1,
+    "entre" => 1,
+    "para" => 1,
+    "paso" => 1,
+    "pregunta" => 1,
+    "sobre" => 1,
+    "tarde" => 1,
+    "tema" => 1,
+    "trabajo" => 1,
+    "una" => 1
+  }
+
   # Get existing clas per lng
   Cla.where(:lng_id=>language_id).each do |c|
     cla_hash[c.cla] = c
@@ -36,10 +55,10 @@ task :create_clauses => [:environment] do
     ActiveRecord::Migration.execute("select cap_id,cla_id from caps_clas").each do |cc|
       cap_id_cla_id["#{cc[0]}-#{cc[1]}"]=1
     end
-    # get pronouns and make hash
-      ActiveRecord::Migration.execute("select con,pronoun from cons where lng_id=#{language_id}; ").each do |j|
-        con_hash_of_tenses[j[0]]= Array.new()
-      end
+  # get pronouns and make hash
+    ActiveRecord::Migration.execute("select con,pronoun from cons where lng_id=#{language_id}; ").each do |j|
+      con_hash_of_tenses[j[0]]= Array.new()
+    end
     count = 0
     ActiveRecord::Migration.execute("select con, mood_id, tense_id, tiempo_id,verb_id,id,pronoun from cons where lng_id=#{language_id}").each do |j|
       count+=1
@@ -55,8 +74,9 @@ task :create_clauses => [:environment] do
 
   end#end suppress
 
-  print "#{conj_id.size} XXXX #{con_hash_of_tenses.size}\n\n"
+  #print "#{conj_id} \n\n ***** #{con_hash_of_tenses}\n\n"
   count=0
+
   ActiveRecord::Migration.suppress_messages do
     ActiveRecord::Migration.execute("select cla, id, mood_id, tense_id from clas where lng_id=#{language_id};").each do |c|
       count+=1
@@ -100,9 +120,8 @@ task :create_clauses => [:environment] do
 #            cla_cap["#{a[i-1]} #{a[i]}::#{temp_cap_id}"]=1    if a[i]=~/[a-zA-Z]/ #this should be ok with multiple clauses
             cla_id_cap_id["#{words[i-1]} #{words[i]}-#{mood_id_tense_id}::#{temp_cap_id}"]=1    if words[i]=~/[a-zA-Z]/ #this should be ok with multiple clauses
           end #end of loop through con_hash_of_tenses
-        elsif conj_id[words[i]] then     #This single word is a conjugation
+        elsif conj_id[words[i]] and !ignore_words[words[i]] then     #This single word is a conjugation
           con_hash_of_tenses[words[i]].each do |mood_id_tense_id|
-            puts "!!! #{c[0]} #{words[i]}-#{mood_id_tense_id}"
             unless seen["#{words[i]}-#{mood_id_tense_id}"] then #It is the first instance of this conjugation-mood_id-tense_id
               (mood_id,tense_id)= mood_id_tense_id.split(/-/)
               w = Cla.new(:cla=>words[i], :lng_id=>language_id, :mood_id=>mood_id,:tense_id=>tense_id, :tiempo_id=>tiempos["#{words[i]}-#{mood_id_tense_id}"], :verb_id=>verbs["#{words[i]}-#{mood_id_tense_id}"])
@@ -120,7 +139,7 @@ task :create_clauses => [:environment] do
       end #end of looping through words in cap
     end #end of each cap
   end #end suppress
-  print "cla_id_cap_id size: #{cla_id_cap_id.size} XXXXXXXXXXXXXXXXXXXXXX\n\n"
+
   clauses = Hash.new() #This is for looping through clauses found in caps and adding cat and title
   count=0
   createdAt = Time.now.strftime('%Y-%m-%d %H:%M:%S')
