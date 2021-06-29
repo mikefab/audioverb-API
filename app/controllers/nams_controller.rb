@@ -75,6 +75,21 @@ class NamsController < ApplicationController
     end
   end
 
+  def caps_by_nam
+    media  = params[:nam]
+    nam = Nam.find_by_nam(media)
+    render json: nam.caps.all.map{ |c| {
+        cap: c.cap,
+        num: c.num,
+        start: c.start,
+        stop: c.stop,
+        wcount: c.wcount,
+        last_cap_stop: c.last_cap_stop
+      }
+    }
+
+
+  end
   def search
     search = params[:search]
     lng_id = Lng.where(cod: params[:lng]).first.id
