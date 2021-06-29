@@ -8,6 +8,7 @@ Rails.application.routes.draw do
         resources :items
       end
     end
+  get 'nam/:nam'                => 'nams#caps_by_nam'
   get 'nams/'                => 'nams#all'
   get 'verbs_for_name/:nam' => 'nams#verbs_for_nam'
   get 'verb_for_name/:nam/:verb' => 'nams#conjugations_for_nam'
