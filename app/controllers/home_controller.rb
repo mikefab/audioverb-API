@@ -51,21 +51,16 @@ class HomeController < ApplicationController
     start = params[:start].gsub('-', '.')
     stop = params[:stop].gsub('-', '.')
     user_id = params[:user_code]
-    puts 'ZZZZZZ'
     if ENV.fetch("USER_CODE")===user_id then
-      puts "AAAAa"
       puts nam
       nam_id = Nam.find_by(nam: nam).id
       cap = Cap.find_by(nam_id: nam_id, num: num)
       cut = Cut.find_by(nam: nam, num: num, user_id: user_id)
       if !cut and cap then
-        puts "000000"
         Cut.create(cap: cap, start: start, stop: stop, user_id: user_id, nam: nam, num: num, hashed_ip: request.remote_ip.hash)
       elsif cut && cap
-        puts "1111"
         cut.update(start: start, stop: stop)
       end
-      puts "22222"
       render json: {message: 'cut updated'}
     else
       render json: {error: 'not authorized'}
