@@ -103,15 +103,21 @@ ActiveRecord::Schema.define(version: 2021_04_18_015827) do
   end
 
   create_table "cuts", charset: "utf8mb4", force: :cascade do |t|
-    t.integer "num"
-    t.string "start"
-    t.string "stop"
-    t.integer "cap_id"
+    t.string "cap_id"
+    t.string "user_id", null: false
+    t.string "start", null: false
+    t.string "stop", null: false
+    t.boolean "approved"
+    t.string "approved_by"
+    t.string "nam", null: false
+    t.integer "num", null: false
+    t.string "user_name"
+    t.string "hashed_ip", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.index ["cap_id"], name: "index_cuts_on_cap_id"
-    t.index ["num"], name: "index_cuts_on_num"
-    t.index ["start"], name: "index_cuts_on_start"
+    t.index ["nam"], name: "index_cuts_on_nam"
+    t.index ["user_id"], name: "index_cuts_on_user_id"
   end
 
   create_table "defs", charset: "utf8mb4", force: :cascade do |t|

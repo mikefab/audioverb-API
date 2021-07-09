@@ -12,6 +12,7 @@ class OrdersController < ApplicationController
     else
       source  = params[:source]
       name    = params[:name]
+      num    = params[:num]
       start   = params[:start].gsub('_', '.')
       stop    = params[:stop].gsub('_', '.')
       format  = params[:format]
@@ -37,7 +38,7 @@ class OrdersController < ApplicationController
         end
       end
       system("cd public/#{format}/#{source}/#{name}; #{command}")
-      redirect_to "/#{format}/#{source}/#{name}/#{start}~#{stop}_#{name}.#{format}"
+      redirect_to "/#{format}/#{source}/#{name}/#{start}~#{stop}_#{name}.#{format}?num=#{num}"
     else
   	  logger.info "range too big."
     end #end if range

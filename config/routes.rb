@@ -22,5 +22,7 @@ Rails.application.routes.draw do
   get 'tense/:tense/verb/:verb'                => 'home#conjugation'
   get 'search/caps/:lng/:search/:nam'          => 'nams#search_caps_nam'
   get 'combine'                                => 'orders#combine' # for concating png and mp3 files on the fly
-  get 'combine/:format/:source/:name/:start/:stop.:extenstion' => 'orders#combine' # for concating png and mp3 files on the fly
+  get 'combine/:format/:source/:name/(/:num/):start/:stop.:extenstion' => 'orders#combine' # for concating png and mp3 files on the fly
+  # get 'cuts/:name/:num/:start/:stop/:user_id' => 'home#save_cut'
+  post 'cuts' => 'home#save_cut'
 end
