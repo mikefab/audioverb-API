@@ -238,3 +238,105 @@ task :import_verbs => [:environment] do
   print "\n#{conjugations.size}\n#{cm.size}\n#{cmktp.size}\n"
   file.close
 end
+
+task :import_chinese_grams => [:environment] do
+  # Imports monograms and bigrams with frequency statistics from grams.txt into vocs table.
+  # Can assume that if we already have a word in the words table, that we have all of its definitions
+  chinese_lng_id = Lng.where(cod:  'chi_hans')[0].id
+
+  basedir = Rails.root.to_s + "/lib/text_files"
+  {"monograms" => 1, "bigrams" => 2}.each do |k, v|
+    vocs=Hash.new()
+    ActiveRecord::Migration.execute("select id, voc from vocs where gram = #{v}").each do |voc|
+      vocs[voc[1]] = voc[0]
+    end
+    file  = File.new(basedir +"/#{k}.txt", "r")
+    count = 0
+
+    ActiveRecord::Migration.suppress_messages do
+      while (line = file.gets)
+        line                   =  line.gsub(/(\n|\r)/,"")
+        (rank, voc, raw, freq) =  line.split(/\t/)
+        puts "#{voc.gsub(/\s+$/, '')}-"
+        count+=1
+        print "#{rank} #{raw} #{freq} #{voc}\n" if count%500==2
+        unless vocs[voc]  then
+          #voc = Voc.create(:voc=>voc,:raw=>raw, :rank=>rank,:freq=>freq,:lng_id=>chinese_lng_id,:gram=>v)
+          vocs[voc.voc] = voc.id
+        end
+      end
+    end
+  end
+end
+
+# Imports list of kanji with pinyin
+task :import_kanji => [:environment] do
+#  require 'ting/string'
+  pinyin_hash    = Hash.new
+  kanji_pinyin   = Hash.new
+  entry_hash     = Hash.new #entry - defs
+  basedir = Rails.root.to_s + "/lib/text_files"
+  file    = File.new(basedir +"/cedict_ts.u8", "r")
+  while (line = file.gets)
+    m =  /^(.+?)(\s+)(.+?)(\s+)(\[)(.+?)(\])(\s+\/)(.+?)$/.match line
+    unless m.nil?
+      # m[3] is the first simplified character. m[6] is the numeric pinyin
+     simplified = m[3]
+     pinyin     = m[6]
+     entry_hash["#{simplified}-#{pinyin}"] = m[9]       # m[3] is the first simplified character. m[6] is the numeric pinyin
+     simplified.gsub(/\s+/,"").split(//).each_with_index do |zi, i|
+       kanji_pinyin["#{zi}-#{pinyin.split(/ /)[i]}"] = 1
+     end
+    end
+  end
+  c=0
+  puts "Done reading file"
+  # Loop throuth hash of kanji-pinyin and create kanjis
+  kanji_pinyin.each do |k,v|
+    kanji, pinyin = k.split(/-/)
+    Kanji.find_or_initialize_by(kanji: kanji, pinyin: PinyinToneConverter.number_to_utf8(pinyin)).save!
+  end
+
+   entry_hash.each do |entry, definitions|
+    # entry:  伤口-shang1 definitions: kou3 wound/cut/
+    entry = entry.split(/-/)
+    c+=1
+
+    next unless entry[1].split(/ /).first.match(/[0-9]/)
+    kanji = Kanji.where(kanji: entry[0].split(//).first, pinyin: PinyinToneConverter.number_to_utf8(entry[1].split(/ /).first)).first
+    entry = Entry.find_or_initialize_by(entry: entry[0], kanji_id: kanji.id, pinyin:PinyinToneConverter.number_to_utf8(entry[1]))
+    entry.save!
+    defs  = definitions.split("/")
+    defs.each do |definition|
+      next if definition.match(/\r/)
+      definition = Def.find_or_initialize_by(def: definition, entry_id: entry.id, kanji_id: kanji.id)
+      puts "DEF: #{c} #{kanji.kanji} #{definition.def}" if c%500 == 0
+      definition.save!
+    end
+  end
+end
+
+# Imports list of kanji with pinyin
+#bundle exec rake imoprt_hsk RAILS_ENV=production --trace
+task :import_hsk => [:environment] do
+  # require 'ting/string'
+  frequency = nil
+  basedir = Rails.root.to_s + "/lib/text_files"
+  file    = File.new(basedir +"/hsk.csv", "r")
+  while (line = file.gets)
+    ary = line.split(/,/)
+    #puts Voc.where(voc: ary[1]).length
+
+    if ary[0].match(/\d/)
+      voc = Voc.where(voc: ary[1]).first
+      if voc
+        frequency = voc.freq
+        rank      = voc.rank
+        raw       = voc.raw
+        voc.update(level: ary[0])
+      else
+        Voc.find_or_initialize_by(voc: ary[1], freq: frequency, lng_id: 81, rank: rank, raw: raw, level: ary[0]).save!
+      end
+    end
+  end
+end

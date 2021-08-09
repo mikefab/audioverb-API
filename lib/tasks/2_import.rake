@@ -6,6 +6,7 @@
 # RAILS_ENV=development rake import_movies file=relatos.salvajes language=spa --trace
 # RAILS_ENV=development rake import_movies file=nueve.reinas language=spa --trace
 # RAILS_ENV=development rake import_movies file=maria.llena.de.gracia language=spa --trace
+# RAILS_ENV=development rake import_movies file=museo language=spa --trace
 task :import_movies => [:environment] do
   main_language_id = Lng.where(%Q/cod="#{ENV['language']}"/).first.id
 
@@ -51,9 +52,9 @@ task :import_movies => [:environment] do
       o=o[0,255]
 
       if language_id !=c_language_id
-         s= Sub.new(:sub=>o,:nam_id=>nam.id,:src_id=>src.id, :lng_id=>language_id,:start=>"#{start}",:stop=>"#{stop}",:clng_id=>c_language_id,:num=>num).save
+         s= Sub.where(:sub=>o,:nam_id=>nam.id,:src_id=>src.id, :lng_id=>language_id,:start=>"#{start}",:stop=>"#{stop}",:clng_id=>c_language_id,:num=>num).first_or_create
       else
-         s= Cap.new(:cap=>o,:nam_id=>nam.id,:src_id=>src.id, :lng_id=>language_id,:start=>"#{start}",:stop=>"#{stop}",:num=>num,:wcount=>wcount,:ccount=>ccount).save
+         s= Cap.where(:cap=>o,:nam_id=>nam.id,:src_id=>src.id, :lng_id=>language_id,:start=>"#{start}",:stop=>"#{stop}",:num=>num,:wcount=>wcount,:ccount=>ccount).first_or_create
       end
     end
   end

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_04_18_015827) do
+ActiveRecord::Schema.define(version: 2021_08_05_210718) do
 
   create_table "acts", charset: "utf8mb4", force: :cascade do |t|
     t.integer "user_id"
@@ -141,8 +141,16 @@ ActiveRecord::Schema.define(version: 2021_04_18_015827) do
   create_table "entries", charset: "utf8mb4", force: :cascade do |t|
     t.integer "kanji_id"
     t.string "entry"
+    t.string "pinyin"
     t.index ["entry"], name: "index_entries_on_entry"
     t.index ["kanji_id"], name: "index_entries_on_kanji_id"
+  end
+
+  create_table "kanjis", charset: "utf8mb4", force: :cascade do |t|
+    t.string "kanji"
+    t.string "pinyin"
+    t.index ["kanji"], name: "index_kanjis_on_kanji"
+    t.index ["pinyin"], name: "index_kanjis_on_pinyin"
   end
 
   create_table "lasts", charset: "utf8mb4", force: :cascade do |t|
@@ -288,8 +296,10 @@ ActiveRecord::Schema.define(version: 2021_04_18_015827) do
     t.integer "lng_id"
     t.integer "rank"
     t.integer "raw"
+    t.integer "level"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.index ["level"], name: "index_vocs_on_level"
   end
 
 end

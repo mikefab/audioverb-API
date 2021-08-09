@@ -77,6 +77,7 @@ task :create_clauses => [:environment] do
       con_hash_of_tenses[j[0]]= Array.new()
     end
     count = 0
+
     ActiveRecord::Migration.execute("select con, mood_id, tense_id, tiempo_id,verb_id,id,pronoun from cons where lng_id=#{language_id}").each do |j|
       count+=1
       temp="#{j[0]}-#{j[1]}-#{j[2]}" #conjugation-mood_id-tense_id
@@ -197,4 +198,106 @@ task :create_clauses => [:environment] do
     print "last: #{k}\n"
     cla_hash[k].save
   end
+end
+
+#Goes through vocab table, searching words and noting caption languages it's been translated to
+#Also saves cap media tags in tags_vocs
+task :count_chinese =>[:environment] do
+  c                     = 0
+  lng_id                = Lng.where(cod: 'chi_hans').first.id
+  lv                    = Hash.new() #lngs vocs
+  nv                    = Hash.new() #nams_vocs #Not sure how to handle caps_vocs with chinese frequency lists
+  cv                    = Hash.new() # caps_vocs
+  lngs_for_name         = Hash.new()
+
+  # Create hash of LangaugesVocab so later you know whether to update or insert new record.
+  print "creating languages vocabs hash\n"
+  ActiveRecord::Migration.suppress_messages do
+    ActiveRecord::Migration.execute("select lng_id, voc_id, seen from lngs_vocs where olng_id=#{lng_id}").each do |l|
+      lv["#{l[0]}-#{l[1]}"]=l[2]
+    end
+  end
+  
+  # Create hash nams vocs so later you know whether to update or insert new record.
+  ActiveRecord::Migration.execute("select nam_id,voc_id from nams_vocs").each do |n|
+    nv["#{n[0]}-#{n[1]}"]=1
+  end
+
+  # Create hash nams vocs so later you know whether to update or insert new record.
+  ActiveRecord::Migration.execute("select cap_id,voc_id from caps_vocs").each do |c|
+    cv["#{c[0]}-#{c[1]}"]=1
+  end
+
+  #Create hash names, values being arays of their languages
+  print "creating names hash\n"
+  Nam.where(lng_id: lng_id).each do |n|
+    if n.lngs.size>0
+      lngs_for_name[n.id] = Array.new()
+      n.lngs.each do |l|
+        lngs_for_name[n.id] << l.id
+      end
+      puts lngs_for_name
+      lngs_for_name[n.id]<<lng_id
+      lngs_for_name[n.id].uniq!
+    end
+  end #end of name find loop
+  print "about to loop through caps\n"
+
+  count = Voc.where(lng_id: lng_id).count
+
+  print "total_vocabs for #{lng_id} is #{count}\n"
+
+  #loop through each vocab, create language_count hash for each, then insert or update
+  ActiveRecord::Migration.suppress_messages do
+    #ActiveRecord::Migration.execute("select id,voc from vocs where lng_id=#{lng_id} and voc is not null and CHARACTER_LENGTH(voc) >1 and id > 160000 and voc not like \"%�%\" and level is null order by id").each do |voc|
+    ActiveRecord::Migration.execute("select id, voc from vocs where lng_id=#{lng_id} and voc is not null and voc not like \"%�%\" order by id").each do |voc|
+      begin
+      c+=1
+      print "#{c} #{voc[0]}  #{voc[1]} ***\n" if c%200==2
+      language_count  = Hash.new()
+
+      caps            = Cap.search "\"#{voc[1]}\"", :match_mode=>:extended, :with=>{:lng_id=>lng_id},:per_page=>3000
+      #caps            = Cap.where("cap like '%#{voc[1]}%' and lng_id = #{lng_id}")
+
+      caps.each do |cap|
+        #update caps_vocs
+        unless nv["#{cap.nam_id}-#{voc[0]}"]
+          ActiveRecord::Migration.execute("insert into nams_vocs(nam_id,voc_id)values(#{cap.nam_id},#{voc[0]})")
+          nv["#{cap.nam_id}-#{voc[0]}"] =1
+        end
+
+        unless cv["#{cap.id}-#{voc[0]}"]
+          if voc[1].length > 1
+            ActiveRecord::Migration.execute("insert into caps_vocs(cap_id,voc_id)values(#{cap.id},#{voc[0]})")
+          end
+          cv["#{cap.id}-#{voc[0]}"] =1
+        end
+
+
+
+        if lngs_for_name[cap.nam_id]
+          #add all nam names to each word
+          lngs_for_name[cap.nam_id].each do |lang_id|
+            if language_count["#{lang_id}-#{voc[0]}"] then
+              language_count["#{lang_id}-#{voc[0]}"]+=1
+            else
+              language_count["#{lang_id}-#{voc[0]}"]=1
+            end
+          end #end loop through each e in name_id array
+        end #end if name_id array exists
+      end #end cap loop
+      language_count.each do |k,v|
+        (lang_id,vocab_id)=k.split(/-/)
+        if lv[k]
+          ActiveRecord::Migration.execute("update lngs_vocs set seen=#{v} where lng_id=#{lang_id} and voc_id=#{vocab_id};") if v!=lv[k]
+        end
+        ActiveRecord::Migration.execute("insert into lngs_vocs(lng_id,voc_id,seen,olng_id)values(#{lang_id},#{vocab_id},#{v},#{lng_id})") unless lv[k]
+      end
+    rescue
+      print "nearly got messed up with #{voc[0]} #{voc[1]}\n"
+    end
+    end #end vocab loop
+   # ActiveRecord::Migration.execute("update last_cap_id set cap_id=#{last_cap_id} where des = 'vocabs';")
+  end #end suppression
+ #Rails.cache.clear()
 end
