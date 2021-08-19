@@ -10,7 +10,6 @@ task :create_clauses => [:environment] do
     "abogado" => 1,
     "así" => 1,
     "abajo" => 1,
-    "abogado" => 1,
     "anillo" => 1,
     "arma" => 1,
     "armas" => 1,
@@ -217,7 +216,7 @@ task :count_chinese =>[:environment] do
       lv["#{l[0]}-#{l[1]}"]=l[2]
     end
   end
-  
+
   # Create hash nams vocs so later you know whether to update or insert new record.
   ActiveRecord::Migration.execute("select nam_id,voc_id from nams_vocs").each do |n|
     nv["#{n[0]}-#{n[1]}"]=1
@@ -236,7 +235,7 @@ task :count_chinese =>[:environment] do
       n.lngs.each do |l|
         lngs_for_name[n.id] << l.id
       end
-      puts lngs_for_name
+
       lngs_for_name[n.id]<<lng_id
       lngs_for_name[n.id].uniq!
     end
@@ -258,7 +257,7 @@ task :count_chinese =>[:environment] do
 
       caps            = Cap.search "\"#{voc[1]}\"", :match_mode=>:extended, :with=>{:lng_id=>lng_id},:per_page=>3000
       #caps            = Cap.where("cap like '%#{voc[1]}%' and lng_id = #{lng_id}")
-
+      #puts "#{voc} - #{caps.length} cccc"
       caps.each do |cap|
         #update caps_vocs
         unless nv["#{cap.nam_id}-#{voc[0]}"]
@@ -267,13 +266,12 @@ task :count_chinese =>[:environment] do
         end
 
         unless cv["#{cap.id}-#{voc[0]}"]
+          # Not sure why limiting to bigrams
           if voc[1].length > 1
             ActiveRecord::Migration.execute("insert into caps_vocs(cap_id,voc_id)values(#{cap.id},#{voc[0]})")
           end
           cv["#{cap.id}-#{voc[0]}"] =1
         end
-
-
 
         if lngs_for_name[cap.nam_id]
           #add all nam names to each word
@@ -286,12 +284,15 @@ task :count_chinese =>[:environment] do
           end #end loop through each e in name_id array
         end #end if name_id array exists
       end #end cap loop
+
       language_count.each do |k,v|
         (lang_id,vocab_id)=k.split(/-/)
+
         if lv[k]
           ActiveRecord::Migration.execute("update lngs_vocs set seen=#{v} where lng_id=#{lang_id} and voc_id=#{vocab_id};") if v!=lv[k]
+        else
+          ActiveRecord::Migration.execute("insert into lngs_vocs(lng_id,voc_id,seen,olng_id)values(#{lang_id},#{vocab_id},#{v},#{lng_id})")
         end
-        ActiveRecord::Migration.execute("insert into lngs_vocs(lng_id,voc_id,seen,olng_id)values(#{lang_id},#{vocab_id},#{v},#{lng_id})") unless lv[k]
       end
     rescue
       print "nearly got messed up with #{voc[0]} #{voc[1]}\n"

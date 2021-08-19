@@ -1,4 +1,4 @@
-# python3 prepare_srt.py spa eng the.clan "SUBDL.com__the.clan1307355/El Clan 2015 Argentino 720x300p h264 AAC 48KHz Makalakato.eng.srt"
+# python3 prepare_srt.py spa eng the.clan "relatos_salvajes/relatos_salvajes_eng.srt"
 import pysrt
 import sys
 import re

@@ -5,8 +5,6 @@ class CreateLngsVocs < ActiveRecord::Migration[6.0]
       t.integer :voc_id
       t.integer :seen
       t.integer :olng_id
-
-      t.timestamps
     end
     add_index :lngs_vocs, :lng_id
     add_index :lngs_vocs, :voc_id

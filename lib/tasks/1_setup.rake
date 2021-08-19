@@ -326,7 +326,7 @@ task :import_hsk => [:environment] do
   while (line = file.gets)
     ary = line.split(/,/)
     #puts Voc.where(voc: ary[1]).length
-
+    puts "#{ary[1]} #{ary[0]}"
     if ary[0].match(/\d/)
       voc = Voc.where(voc: ary[1]).first
       if voc

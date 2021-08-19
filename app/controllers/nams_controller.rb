@@ -93,7 +93,7 @@ class NamsController < ApplicationController
   def search
     search = params[:search]
     lng_id = Lng.where(cod: params[:lng]).first.id
-    puts "#{lng_id} #{search} ssss"
+
     if Rails.cache.exist?("search-#{lng_id}-#{search}")
       render json: Rails.cache.read("search-#{lng_id}-#{search}")
     else

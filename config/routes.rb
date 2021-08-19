@@ -10,6 +10,9 @@ Rails.application.routes.draw do
     end
   get 'nam/:nam'                => 'nams#caps_by_nam'
   get 'nams/'                => 'nams#all'
+  get 'nams/:language'                        => 'nams#list'
+  get 'grams/list/:gram'                       => 'home#grams'
+  get 'level/:gram/:level/:lng/:media'         => 'home#level'
   get 'verbs_for_name/:nam' => 'nams#verbs_for_nam'
   get 'verb_for_name/:nam/:verb' => 'nams#conjugations_for_nam'
   get 'caps/:nam/:num'                         => 'caps#cap_by_nam_num'

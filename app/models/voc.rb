@@ -14,9 +14,10 @@ class Voc < ApplicationRecord
    if Rails.cache.exist?("grams_#{gram_type}_#{title_id}") then
     return Rails.cache.read("grams_#{gram_type}_#{title_id}")
    end
-    lng_id     = Lng.where(cod: 'chi_hans').first.id
-    all_movies =  title_id.kind_of?(String) || title_id.kind_of?(NilClass)
 
+    lng_id     = Lng.where(cod: 'chi_hans').first.id
+    puts "UUUUU"
+    all_movies =  title_id.kind_of?(String) || title_id.kind_of?(NilClass)
     grams = movie_grams(gram_type, lng_id, all_movies)
     return Rails.cache.fetch("grams_#{gram_type}_#{title_id}", :expires_in => 3.days){grams.map{|k,v| k }}
   end
