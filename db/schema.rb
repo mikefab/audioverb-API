@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_08_05_210718) do
+ActiveRecord::Schema.define(version: 2021_09_03_183339) do
 
   create_table "acts", charset: "utf8mb4", force: :cascade do |t|
     t.integer "user_id"
@@ -142,8 +142,19 @@ ActiveRecord::Schema.define(version: 2021_08_05_210718) do
     t.integer "kanji_id"
     t.string "entry"
     t.string "pinyin"
+    t.boolean "is_idiom"
     t.index ["entry"], name: "index_entries_on_entry"
+    t.index ["is_idiom"], name: "index_entries_on_is_idiom"
     t.index ["kanji_id"], name: "index_entries_on_kanji_id"
+  end
+
+  create_table "entries_nams", charset: "utf8mb4", force: :cascade do |t|
+    t.integer "nam_id"
+    t.integer "entry_id"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["entry_id"], name: "index_entries_nams_on_entry_id"
+    t.index ["nam_id"], name: "index_entries_nams_on_nam_id"
   end
 
   create_table "kanjis", charset: "utf8mb4", force: :cascade do |t|
@@ -180,8 +191,6 @@ ActiveRecord::Schema.define(version: 2021_08_05_210718) do
     t.integer "voc_id"
     t.integer "seen"
     t.integer "olng_id"
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
     t.index ["lng_id"], name: "index_lngs_vocs_on_lng_id"
     t.index ["olng_id"], name: "index_lngs_vocs_on_olng_id"
     t.index ["voc_id"], name: "index_lngs_vocs_on_voc_id"

@@ -120,11 +120,14 @@ class NamsController < ApplicationController
   end
 
   def list
-    if Rails.cache.exist?("list-#{params[:language]}")
-      render json: Rails.cache.read("list-#{params[:language]}")
-    else
-      lng_id = Lng.where(lng: params[:language]).first.id
-      render json: Rails.cache.fetch("list-#{params[:language]}", :expires_in => 3.days){ Nam.where(lng_id: lng_id).order(:created_at).reverse}
-    end
+    lng_id = Lng.where(lng: params[:language]).first.id
+    render json: Nam.where(lng_id: lng_id).order(:created_at).reverse
+    # puts "list-#{params[:language]} !!!"
+    # if Rails.cache.exist?("list-#{params[:language]}")
+    #   render json: Rails.cache.read("list-#{params[:language]}")
+    # else
+    #   lng_id = Lng.where(lng: params[:language]).first.id
+    #   render json: Rails.cache.fetch("list-#{params[:language]}", :expires_in => 3.days){ Nam.where(lng_id: lng_id).order(:created_at).reverse}
+    # end
   end
 end

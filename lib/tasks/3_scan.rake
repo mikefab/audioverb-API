@@ -25,12 +25,15 @@ task :create_clauses => [:environment] do
     "cosa" => 1,
     "cosas" => 1,
     "como" => 1,
+    "cuenta" => 1,
     "entre" => 1,
     "forma" => 1,
     "idea" => 1,
     "importa" => 1,
+    "multa" => 1,
     "para" => 1,
     "paso" => 1,
+    "piso" => 1,
     "pregunta" => 1,
     "sobre" => 1,
     "sueño" => 1,
@@ -198,6 +201,26 @@ task :create_clauses => [:environment] do
     cla_hash[k].save
   end
 end
+
+#Goes through vocab table, searching words and noting caption languages it's been translated to
+#Also saves cap media tags in tags_vocs
+task :chinese_idioms =>[:environment] do
+  lng_id = Lng.where(cod: 'chi_hans').first.id
+  Entry.where(is_idiom: true).all.each do |idiom|
+    second = idiom.entry.split("，")[1]
+    caps = Cap.search "\"#{idiom.entry}\"", :match_mode=>:extended, :with=>{:lng_id=>lng_id},:per_page=>3000
+    if caps.length > 0 then
+      caps.each do | cap |
+        puts cap.nam.nam
+        EntriesNam.find_or_create_by(
+          entry_id: idiom.id,
+          nam_id: cap.nam.id,
+        )
+      end
+    end
+  end
+end
+
 
 #Goes through vocab table, searching words and noting caption languages it's been translated to
 #Also saves cap media tags in tags_vocs

@@ -1,5 +1,6 @@
 class Lng < ApplicationRecord
-  has_and_belongs_to_many :lngs, :join_table => "lngs_nams"
+  has_and_belongs_to_many :nams, :join_table => "lngs_nams"
+  has_many :entries, :through => :nams 
   #attr_accessible :cod, :lng
 
   def self.seed_data

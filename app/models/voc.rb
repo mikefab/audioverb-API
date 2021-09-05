@@ -16,7 +16,6 @@ class Voc < ApplicationRecord
    end
 
     lng_id     = Lng.where(cod: 'chi_hans').first.id
-    puts "UUUUU"
     all_movies =  title_id.kind_of?(String) || title_id.kind_of?(NilClass)
     grams = movie_grams(gram_type, lng_id, all_movies)
     return Rails.cache.fetch("grams_#{gram_type}_#{title_id}", :expires_in => 3.days){grams.map{|k,v| k }}
@@ -50,6 +49,7 @@ class Voc < ApplicationRecord
   # Return array of characters found in either all Chinese movies or in a specific Chinese movie title.
   # gram_type is 1 or 2 for monograms and bigrams
   def self.level(gram, level,title_id)
+
    # if Rails.cache.exist?("level_#{gram}_#{level}_#{title_id}") then
    #  return Rails.cache.read("level_#{gram}_#{level}_#{title_id}")
    # end

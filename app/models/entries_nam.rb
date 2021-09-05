@@ -1,0 +1,2 @@
+class EntriesNam < ApplicationRecord
+end

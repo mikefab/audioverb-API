@@ -1,6 +1,7 @@
 class Entry < ApplicationRecord
   belongs_to :kanji
   has_many :defs
+  has_and_belongs_to_many :nams
   #attr_accessible :entry, :kanji_id, :pinyin
 
   def self.get_clean_entries(kanji_id)

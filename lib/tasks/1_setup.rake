@@ -257,11 +257,10 @@ task :import_chinese_grams => [:environment] do
       while (line = file.gets)
         line                   =  line.gsub(/(\n|\r)/,"")
         (rank, voc, raw, freq) =  line.split(/\t/)
-        puts "#{voc.gsub(/\s+$/, '')}-"
         count+=1
         print "#{rank} #{raw} #{freq} #{voc}\n" if count%500==2
         unless vocs[voc]  then
-          #voc = Voc.create(:voc=>voc,:raw=>raw, :rank=>rank,:freq=>freq,:lng_id=>chinese_lng_id,:gram=>v)
+          voc = Voc.create(:voc=>voc,:raw=>raw, :rank=>rank,:freq=>freq,:lng_id=>chinese_lng_id,:gram=>v)
           vocs[voc.voc] = voc.id
         end
       end
@@ -279,11 +278,12 @@ task :import_kanji => [:environment] do
   file    = File.new(basedir +"/cedict_ts.u8", "r")
   while (line = file.gets)
     m =  /^(.+?)(\s+)(.+?)(\s+)(\[)(.+?)(\])(\s+\/)(.+?)$/.match line
+    is_idiom = line.match(/\(idiom\)/) ? true : false
     unless m.nil?
       # m[3] is the first simplified character. m[6] is the numeric pinyin
      simplified = m[3]
      pinyin     = m[6]
-     entry_hash["#{simplified}-#{pinyin}"] = m[9]       # m[3] is the first simplified character. m[6] is the numeric pinyin
+     entry_hash["#{simplified}-#{pinyin}-#{is_idiom}"] = m[9]       # m[3] is the first simplified character. m[6] is the numeric pinyin
      simplified.gsub(/\s+/,"").split(//).each_with_index do |zi, i|
        kanji_pinyin["#{zi}-#{pinyin.split(/ /)[i]}"] = 1
      end
@@ -291,6 +291,7 @@ task :import_kanji => [:environment] do
   end
   c=0
   puts "Done reading file"
+
   # Loop throuth hash of kanji-pinyin and create kanjis
   kanji_pinyin.each do |k,v|
     kanji, pinyin = k.split(/-/)
@@ -304,7 +305,12 @@ task :import_kanji => [:environment] do
 
     next unless entry[1].split(/ /).first.match(/[0-9]/)
     kanji = Kanji.where(kanji: entry[0].split(//).first, pinyin: PinyinToneConverter.number_to_utf8(entry[1].split(/ /).first)).first
-    entry = Entry.find_or_initialize_by(entry: entry[0], kanji_id: kanji.id, pinyin:PinyinToneConverter.number_to_utf8(entry[1]))
+    entry = Entry.find_or_initialize_by(
+      entry: entry[0],
+      kanji_id: kanji.id,
+      pinyin:PinyinToneConverter.number_to_utf8(entry[1]),
+      is_idiom: entry[2]
+    )
     entry.save!
     defs  = definitions.split("/")
     defs.each do |definition|

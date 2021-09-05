@@ -8,6 +8,8 @@ Rails.application.routes.draw do
         resources :items
       end
     end
+  get 'idioms/:language'                => 'entries#idioms'
+  get 'idioms/media/:media'                => 'entries#idioms_by_media'
   get 'nam/:nam'                => 'nams#caps_by_nam'
   get 'nams/'                => 'nams#all'
   get 'nams/:language'                        => 'nams#list'
