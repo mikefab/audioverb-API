@@ -1,6 +1,7 @@
 class Nam < ApplicationRecord
   has_and_belongs_to_many :lngs, :join_table => "lngs_nams"
   has_many :caps
+  has_many :cuts
   has_and_belongs_to_many :vocs, :join_table => "nams_vocs"
   has_and_belongs_to_many :entries, :join_table => "entries_nams"
 

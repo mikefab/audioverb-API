@@ -84,11 +84,10 @@ class NamsController < ApplicationController
         start: c.start,
         stop: c.stop,
         wcount: c.wcount,
+#        cuts: c.cuts.length,
         last_cap_stop: c.last_cap_stop
       }
     }
-
-
   end
   def search
     search = params[:search]
