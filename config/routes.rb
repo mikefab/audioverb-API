@@ -8,6 +8,7 @@ Rails.application.routes.draw do
         resources :items
       end
     end
+  get 'languages'                => 'lngs#languages'
   get 'idioms/:language'                => 'entries#idioms'
   get 'idioms/media/:media'                => 'entries#idioms_by_media'
   get 'nam/:nam'                => 'nams#caps_by_nam'
@@ -16,7 +17,9 @@ Rails.application.routes.draw do
   get 'grams/list/:gram'                       => 'home#grams'
   get 'level/:gram/:level/:lng/:media'         => 'home#level'
   get 'verbs_for_name/:nam' => 'nams#verbs_for_nam'
+  get 'verbs/:lng' => 'verbs#verbs'
   get 'verb_for_name/:nam/:verb' => 'nams#conjugations_for_nam'
+  get 'conjugations/:verb/:lng' => 'verbs#conjugations'
   get 'caps/:nam/:num'                         => 'caps#cap_by_nam_num'
   get 'caps/:nam/:num(/:num_records)'          => 'caps#cap_by_nam_num_group'
   get 'search/:lng/:media/:search'             => 'nams#search_by_nam'
