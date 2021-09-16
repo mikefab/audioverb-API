@@ -3,7 +3,7 @@ class Cap < ApplicationRecord
    has_many    :subs
    belongs_to  :nam
    belongs_to  :src
-   has_many    :lngs, :through => :nam
+ has_many :lngs, {:through=>:nam, :source=>"lng"}
    has_and_belongs_to_many :clas, :join_table => "caps_clas"
    has_many    :cuts
    has_many    :trans
