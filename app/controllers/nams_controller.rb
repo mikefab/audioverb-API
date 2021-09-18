@@ -77,17 +77,23 @@ class NamsController < ApplicationController
 
   def caps_by_nam
     media  = params[:nam]
-    nam = Nam.find_by_nam(media)
-    render json: nam.caps.all.map{ |c| {
-        cap: c.cap,
-        num: c.num,
-        start: c.start,
-        stop: c.stop,
-        wcount: c.wcount,
-#        cuts: c.cuts.length,
-        last_cap_stop: c.last_cap_stop
+    if Rails.cache.exist?("captions-#{media}")
+      render json: Rails.cache.read("captions-#{media}")
+    else
+      nam = Nam.find_by_nam(media)
+      render json: Rails.cache.fetch("captions-#{media}", :expires_in => 3.days) {
+        nam.caps.all.map{ |c| {
+            cap: c.cap,
+            num: c.num,
+            start: c.start,
+            stop: c.stop,
+            wcount: c.wcount,
+        #        cuts: c.cuts.length,
+            last_cap_stop: c.last_cap_stop
+          }
+        }
       }
-    }
+    end
   end
   def search
     search = params[:search]
