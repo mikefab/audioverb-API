@@ -1,4 +1,5 @@
 # python3 prepare_srt.py spa eng the.clan "relatos_salvajes/relatos_salvajes_eng.srt"
+# python3 prepare_srt.py chi_hans chi_hans red.sorghum "red_sorghum/red_sorghum_chi_hans.srt"
 import pysrt
 import sys
 import re
@@ -8,7 +9,7 @@ sub_to = sys.argv[2]
 title = sys.argv[3]
 file = sys.argv[4]
 
-subs = pysrt.open('./text_files/' + file, encoding='utf-8')
+subs = pysrt.open('../text_files/srts/' + file, encoding='utf-8')
 
 for sub in subs:
 

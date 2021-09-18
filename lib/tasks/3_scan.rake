@@ -72,7 +72,7 @@ task :create_clauses => [:environment] do
 
   ActiveRecord::Migration.suppress_messages do
     ActiveRecord::Migration.execute("select cap_id,cla_id from caps_clas").each do |cc|
-      cap_id_cla_id["#{cc[0]}-#{cc[1]}"]=1
+      cap_id_cla_id["#{cc[0]}^#{cc[1]}"]=1
     end
   # get pronouns and make hash
     ActiveRecord::Migration.execute("select con,pronoun from cons where lng_id=#{language_id}; ").each do |j|
@@ -82,8 +82,8 @@ task :create_clauses => [:environment] do
 
     ActiveRecord::Migration.execute("select con, mood_id, tense_id, tiempo_id,verb_id,id,pronoun from cons where lng_id=#{language_id}").each do |j|
       count+=1
-      temp="#{j[0]}-#{j[1]}-#{j[2]}" #conjugation-mood_id-tense_id
-      con_hash_of_tenses[j[0]] << "#{j[1]}-#{j[2]}" #mood_id-tense_id #will need to run through this later before creating a new cap
+      temp="#{j[0]}^#{j[1]}^#{j[2]}" #conjugation-mood_id-tense_id
+      con_hash_of_tenses[j[0]] << "#{j[1]}^#{j[2]}" #mood_id-tense_id #will need to run through this later before creating a new cap
       moods[temp]       = j[1]
       tenses[temp]      = j[2]
       tiempos[temp]     = j[3]
@@ -101,14 +101,14 @@ task :create_clauses => [:environment] do
     ActiveRecord::Migration.execute("select cla, id, mood_id, tense_id from clas where lng_id=#{language_id};").each do |c|
       count+=1
       print "#{count} seen size: #{seen.size}\n cla_id size: #{cla_id.size}" if count%1000==2
-      seen["#{c[0]}-#{c[2]}-#{c[3]}"]=1 #cla-mood_id-tense_id for clas with multiple tense parents
-      cla_id["#{c[0]}-#{c[2]}-#{c[3]}"]=c[1] #word=id
+      seen["#{c[0]}^#{c[2]}^#{c[3]}"]=1 #cla-mood_id-tense_id for clas with multiple tense parents
+      cla_id["#{c[0]}^#{c[2]}^#{c[3]}"]=c[1] #word=id
     end
   end #end suppress
 
   ActiveRecord::Migration.suppress_messages do
     ActiveRecord::Migration.execute("select cla_id, lng_id from clas_lngs").each do |cl|
-      cla_id_language_id["#{cl[0]}-#{cl[1]}"]=1000
+      cla_id_language_id["#{cl[0]}^#{cl[1]}"]=1000
     end
   end #end suppress
 
@@ -127,33 +127,33 @@ task :create_clauses => [:environment] do
       words.length.times do |i|
         if i > 0 and conj_id["#{words[i-1]} #{words[i]}"] then  #"#{a[i-1]} #{a[i]}" <-- if this is a conjugation
           con_hash_of_tenses["#{words[i-1]} #{words[i]}"].each do |mood_id_tense_id|
-            (mood_id,tense_id)= mood_id_tense_id.split(/-/)
-            unless seen["#{words[i-1]} #{words[i]}-#{mood_id_tense_id}"] then #so here
-              w2=Cla.new(:cla=>"#{words[(i-1)]} #{words[i]}",:lng_id=>language_id, :mood_id=>mood_id,:tense_id=>tense_id, :tiempo_id=>tiempos["#{words[(i-1)]}-#{mood_id_tense_id}"], :verb_id=>verbs["#{words[(i-1)]} #{words[i]}-#{mood_id_tense_id}"])
+            (mood_id,tense_id)= mood_id_tense_id.split(/\^/)
+            unless seen["#{words[i-1]} #{words[i]}^#{mood_id_tense_id}"] then #so here
+              w2=Cla.new(:cla=>"#{words[(i-1)]} #{words[i]}",:lng_id=>language_id, :mood_id=>mood_id,:tense_id=>tense_id, :tiempo_id=>tiempos["#{words[(i-1)]}^#{mood_id_tense_id}"], :verb_id=>verbs["#{words[(i-1)]} #{words[i]}^#{mood_id_tense_id}"])
               if w2.cla and w2.cla.match(/[a-zA-Z]/) then
                 w2.save!
                 cla_hash[w2.cla] = w2 #save this for later when looping at end for adding to title_list
-                cla_id["#{w2.cla}-#{mood_id_tense_id}"]=w2.id #need to make this key "clause"-mood_id_tense_id
+                cla_id["#{w2.cla}^#{mood_id_tense_id}"]=w2.id #need to make this key "clause"-mood_id_tense_id
               end
-              seen["#{words[i-1]} #{words[i]}-#{mood_id_tense_id}"]=1
+              seen["#{words[i-1]} #{words[i]}^#{mood_id_tense_id}"]=1
             end #end of seen
 #            cla_cap["#{a[i-1]} #{a[i]}::#{temp_cap_id}"]=1    if a[i]=~/[a-zA-Z]/ #this should be ok with multiple clauses
-            cla_id_cap_id["#{words[i-1]} #{words[i]}-#{mood_id_tense_id}::#{temp_cap_id}"]=1    if words[i]=~/[a-zA-Z]/ #this should be ok with multiple clauses
+            cla_id_cap_id["#{words[i-1]} #{words[i]}^#{mood_id_tense_id}::#{temp_cap_id}"]=1    if words[i]=~/[a-zA-Z]/ #this should be ok with multiple clauses
           end #end of loop through con_hash_of_tenses
         elsif conj_id[words[i]] and !ignore_words[words[i]] then     #This single word is a conjugation
           con_hash_of_tenses[words[i]].each do |mood_id_tense_id|
-            unless seen["#{words[i]}-#{mood_id_tense_id}"] then #It is the first instance of this conjugation-mood_id-tense_id
-              (mood_id,tense_id)= mood_id_tense_id.split(/-/)
-              w = Cla.new(:cla=>words[i], :lng_id=>language_id, :mood_id=>mood_id,:tense_id=>tense_id, :tiempo_id=>tiempos["#{words[i]}-#{mood_id_tense_id}"], :verb_id=>verbs["#{words[i]}-#{mood_id_tense_id}"])
+            unless seen["#{words[i]}^#{mood_id_tense_id}"] then #It is the first instance of this conjugation-mood_id-tense_id
+              (mood_id,tense_id)= mood_id_tense_id.split(/\^/)
+              w = Cla.new(:cla=>words[i], :lng_id=>language_id, :mood_id=>mood_id,:tense_id=>tense_id, :tiempo_id=>tiempos["#{words[i]}^#{mood_id_tense_id}"], :verb_id=>verbs["#{words[i]}^#{mood_id_tense_id}"])
               if w.cla and w.cla.match(/[a-zA-Z]/) then
                 w.save!
                 cla_hash[w.cla] = w #save this for later when looping at end for adding to title_list
-                cla_id["#{w.cla}-#{mood_id_tense_id}"]=w.id #need to make this key "clause"-mood_id_tense_id
+                cla_id["#{w.cla}^#{mood_id_tense_id}"]=w.id #need to make this key "clause"-mood_id_tense_id
               end
-              seen["#{words[i]}-#{mood_id_tense_id}"]=1
+              seen["#{words[i]}^#{mood_id_tense_id}"]=1
             end #end if seen for single word
-#           cla_cap["#{a[i]}-#{mood_id_tense_id}::#{temp_cap_id}"]=1  if a[i]=~/[a-zA-Z]/   #need to record cap id with clause id so can loop through cap's subs when storing languages_words
-            cla_id_cap_id["#{words[i]}-#{mood_id_tense_id}::#{temp_cap_id}"]=1  if words[i]=~/[a-zA-Z]/   #need to record cap id with clause id so can loop through cap's subs when storing languages_words
+#           cla_cap["#{a[i]}^#{mood_id_tense_id}::#{temp_cap_id}"]=1  if a[i]=~/[a-zA-Z]/   #need to record cap id with clause id so can loop through cap's subs when storing languages_words
+            cla_id_cap_id["#{words[i]}^#{mood_id_tense_id}::#{temp_cap_id}"]=1  if words[i]=~/[a-zA-Z]/   #need to record cap id with clause id so can loop through cap's subs when storing languages_words
           end #end loop tenses
         end #end if word is conjugation
       end #end of looping through words in cap
@@ -169,35 +169,35 @@ task :create_clauses => [:environment] do
       print "#{count} #{k} #{v}\n" if count%100==2
       claid_capid = k.split("::") #claid_capid[0] is really cla-mood_id_tense_id
       #add native language record for languages_words
-      unless cla_id_language_id["#{cla_id[claid_capid[0]]}-#{language_id}"]  #cla_id key is clause-mood_id_tense_id
+      unless cla_id_language_id["#{cla_id[claid_capid[0]]}^#{language_id}"]  #cla_id key is clause-mood_id_tense_id
         ActiveRecord::Migration.execute("insert into clas_lngs(created_at, updated_at,cla_id,lng_id,olng_id)values('#{createdAt}', '#{createdAt}', #{cla_id[claid_capid[0]]},#{language_id},#{language_id});")
-        cla_id_language_id["#{cla_id[claid_capid[0]]}-#{language_id}"]=1
+        cla_id_language_id["#{cla_id[claid_capid[0]]}^#{language_id}"]=1
       end
       #add all languages that belong to cap's name
 #      print "#{claid_capid[0]} #{claid_capid[1]} <-- cap id\n";
       cap = Cap.find(claid_capid[1])
 
-      clause= k.split(/-/)[0]
+      clause= k.split(/\^/)[0]
       clauses[clause] = 1
       movie_title = cap.nam.title
 
       #Add instance of cap_id_cla_id in cap_clas unless it already exists
-      unless cap_id_cla_id["#{cap.id}-#{cla_id[claid_capid[0]]}"]
+      unless cap_id_cla_id["#{cap.id}^#{cla_id[claid_capid[0]]}"]
         ActiveRecord::Migration.execute("insert into caps_clas(cap_id,cla_id)values(#{cap.id},#{cla_id[claid_capid[0]]});")
-        cap_id_cla_id["#{cap.id}-#{cla_id[claid_capid[0]]}"]=1
+        cap_id_cla_id["#{cap.id}^#{cla_id[claid_capid[0]]}"]=1
       end
 
       cap.nam.lngs.each do |l|
-        unless cla_id_language_id["#{cla_id[claid_capid[0]]}-#{l.id}"]
+        unless cla_id_language_id["#{cla_id[claid_capid[0]]}^#{l.id}"]
           ActiveRecord::Migration.execute("insert into clas_lngs(created_at, updated_at, cla_id,lng_id,olng_id)values('#{createdAt}', '#{createdAt}', #{cla_id[claid_capid[0]]},#{l.id},#{language_id});")
-          cla_id_language_id["#{cla_id[claid_capid[0]]}-#{l.id}"]=1
+          cla_id_language_id["#{cla_id[claid_capid[0]]}^#{l.id}"]=1
         end
       end
     end #end of looping through word_cap
   end #end suppress
-
+  puts cla_hash
   clauses.each do |k,v|
-    print "last: #{k}\n"
+    puts "#{k} - #{v} - #{cla_hash[k].to_s}"
     cla_hash[k].save
   end
 end
@@ -236,18 +236,18 @@ task :count_chinese =>[:environment] do
   print "creating languages vocabs hash\n"
   ActiveRecord::Migration.suppress_messages do
     ActiveRecord::Migration.execute("select lng_id, voc_id, seen from lngs_vocs where olng_id=#{lng_id}").each do |l|
-      lv["#{l[0]}-#{l[1]}"]=l[2]
+      lv["#{l[0]}^#{l[1]}"]=l[2]
     end
   end
 
   # Create hash nams vocs so later you know whether to update or insert new record.
   ActiveRecord::Migration.execute("select nam_id,voc_id from nams_vocs").each do |n|
-    nv["#{n[0]}-#{n[1]}"]=1
+    nv["#{n[0]}^#{n[1]}"]=1
   end
 
   # Create hash nams vocs so later you know whether to update or insert new record.
   ActiveRecord::Migration.execute("select cap_id,voc_id from caps_vocs").each do |c|
-    cv["#{c[0]}-#{c[1]}"]=1
+    cv["#{c[0]}^#{c[1]}"]=1
   end
 
   #Create hash names, values being arays of their languages
@@ -283,33 +283,33 @@ task :count_chinese =>[:environment] do
       #puts "#{voc} - #{caps.length} cccc"
       caps.each do |cap|
         #update caps_vocs
-        unless nv["#{cap.nam_id}-#{voc[0]}"]
+        unless nv["#{cap.nam_id}^#{voc[0]}"]
           ActiveRecord::Migration.execute("insert into nams_vocs(nam_id,voc_id)values(#{cap.nam_id},#{voc[0]})")
-          nv["#{cap.nam_id}-#{voc[0]}"] =1
+          nv["#{cap.nam_id}^#{voc[0]}"] =1
         end
 
-        unless cv["#{cap.id}-#{voc[0]}"]
+        unless cv["#{cap.id}^#{voc[0]}"]
           # Not sure why limiting to bigrams
           if voc[1].length > 1
             ActiveRecord::Migration.execute("insert into caps_vocs(cap_id,voc_id)values(#{cap.id},#{voc[0]})")
           end
-          cv["#{cap.id}-#{voc[0]}"] =1
+          cv["#{cap.id}^#{voc[0]}"] =1
         end
 
         if lngs_for_name[cap.nam_id]
           #add all nam names to each word
           lngs_for_name[cap.nam_id].each do |lang_id|
-            if language_count["#{lang_id}-#{voc[0]}"] then
-              language_count["#{lang_id}-#{voc[0]}"]+=1
+            if language_count["#{lang_id}^#{voc[0]}"] then
+              language_count["#{lang_id}^#{voc[0]}"]+=1
             else
-              language_count["#{lang_id}-#{voc[0]}"]=1
+              language_count["#{lang_id}^#{voc[0]}"]=1
             end
           end #end loop through each e in name_id array
         end #end if name_id array exists
       end #end cap loop
 
       language_count.each do |k,v|
-        (lang_id,vocab_id)=k.split(/-/)
+        (lang_id,vocab_id)=k.split(/\^/)
 
         if lv[k]
           ActiveRecord::Migration.execute("update lngs_vocs set seen=#{v} where lng_id=#{lang_id} and voc_id=#{vocab_id};") if v!=lv[k]
