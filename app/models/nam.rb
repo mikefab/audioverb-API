@@ -104,7 +104,7 @@ class Nam < ApplicationRecord
       #     dramas[my_match[1]][:size] += 1000
       #   end
       # else
-        h[:children].push({name: n.nam, size: (caps.length * 100) , children: caps}) if caps.length  > 0
+        h[:children].push({name: n.nam, size: (caps.length * 100) , total_caps: caps.length, children: caps[0..2]}) if caps.length  > 0
       #end
     end
     dramas.keys.each{|k| h[:children].push dramas[k]}
