@@ -5,7 +5,6 @@ class CreateClasLngs < ActiveRecord::Migration[6.0]
       t.integer :lng_id
       t.integer :olng_id
 
-      t.timestamps
     end
     add_index :clas_lngs, :cla_id
     add_index :clas_lngs, :lng_id
