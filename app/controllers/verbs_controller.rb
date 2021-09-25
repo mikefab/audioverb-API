@@ -7,6 +7,7 @@ class VerbsController < ApplicationController
       # get all tenses for selected native language
       # For now just test against English
       @native_verbs = {}
+      l =   Lng.where(lng: params[:lng]).first
       Lng.where(lng: params[:lng]).first.verbs.each do | v |
         @native_verbs[v.verb] = [v.clas.first.cla]
       end

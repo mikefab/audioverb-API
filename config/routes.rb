@@ -25,7 +25,7 @@ Rails.application.routes.draw do
   get 'search/:lng/:media/:search'             => 'nams#search_by_nam'
   get 'search/:lng/:search'                    => 'nams#search'
 #  get 'tenses/:language/:media'                => 'home#tenses'
-  get 'tenses/:language'                => 'home#tenses'
+  get 'tenses/:language'                => 'tenses#tenses'
   get 'tense/:tense'                           => 'home#tense'
   get 'tense/:tense/verb/:verb'                => 'home#conjugation'
   get 'search/caps/:lng/:search/:nam'          => 'nams#search_caps_nam'

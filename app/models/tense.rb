@@ -15,7 +15,8 @@ class Tense < ApplicationRecord
 	   #      infinitive[c.verb.verb] << c.cla if infinitive[c.verb.verb]
 	   #    end
 	   #  else
-				Cla.joins(:lngs).where(%Q/clas.id=clas_lngs.cla_id and clas.tense_id=#{tense_id}  and clas_lngs.lng_id=#{native_id}/).order(:verb_id).each do |c|
+				#Cla.joins(:lngs).where(%Q/clas.id=clas_lngs.cla_id and clas.tense_id=#{tense_id}  and clas_lngs.lng_id=#{native_id}/).order(:verb_id).each do |c|
+				Cla.where(tense_id: tense_id).order(:verb_id).each do |c|
 	        infinitive[c.verb.verb] = Array.new() if !infinitive[c.verb.verb]
 	        infinitive[c.verb.verb] << c.cla if infinitive[c.verb.verb]
 	      end
@@ -25,21 +26,21 @@ class Tense < ApplicationRecord
 	  end
 	end
 
-  def self.get_tenses_for_native(native_id,site_lng_id)
-    title="tenses_#{native_id}_#{site_lng_id}"
+  def self.tenses(lng_id)
+    title="tenses_#{lng_id}"
     if Rails.cache.exist?(title) then
      return Rails.cache.read(title)
     else
       tenses=Hash.new()
-      if native_id.to_i == site_lng_id.to_i #if checking site language then give all tenses for that language
-        Cla.where("lng_id=#{site_lng_id}").each do |c|
-          tenses[Tense.find(c.tense_id).tense]=1
-        end
-      else #Checking site language against foreign language
-        Cla.joins(:lngs).where("clas_lngs.lng_id =#{native_id} and clas.lng_id=#{site_lng_id}").each do |c|
-          tenses[Tense.find(c.tense_id).tense]=1
-        end
-      end
+      # Cla.where(lng_id: lng_id).each do |c|
+      #   tenses[Tense.find(c.tense_id).tense]=1
+      # end
+			ActiveRecord::Migration.execute("select distinct tense_id from clas where lng_id=#{lng_id}").each do |id|
+				ActiveRecord::Migration.execute("select tense from tenses where id=#{id[0]}").each do |tense|
+        	tenses[tense]=1
+				end
+	    end
+
      Rails.cache.write(title,tenses)
       return tenses
      end

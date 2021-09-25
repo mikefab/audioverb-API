@@ -1,7 +1,8 @@
 class Lng < ApplicationRecord
   has_and_belongs_to_many :nams, :join_table => "lngs_nams"
   has_many :entries, :through => :nams
-  has_and_belongs_to_many :clas, :join_table => "clas_lngs"
+  #has_and_belongs_to_many :clas, :join_table => "clas_lngs"
+  has_many :clas
   has_many :verbs, :through => :clas
   #attr_accessible :cod, :lng
 
