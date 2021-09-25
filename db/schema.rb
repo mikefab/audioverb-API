@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_09_03_183339) do
+ActiveRecord::Schema.define(version: 2021_09_24_000127) do
 
   create_table "acts", charset: "utf8mb4", force: :cascade do |t|
     t.integer "user_id"
@@ -155,6 +155,14 @@ ActiveRecord::Schema.define(version: 2021_09_03_183339) do
     t.datetime "updated_at", precision: 6, null: false
     t.index ["entry_id"], name: "index_entries_nams_on_entry_id"
     t.index ["nam_id"], name: "index_entries_nams_on_nam_id"
+  end
+
+  create_table "idos", charset: "latin1", force: :cascade do |t|
+    t.string "ido"
+    t.string "kind"
+    t.integer "lng_id"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
   end
 
   create_table "kanjis", charset: "utf8mb4", force: :cascade do |t|
