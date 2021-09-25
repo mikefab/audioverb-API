@@ -5,6 +5,74 @@ task :add_languages => [:environment] do
   Lng.seed_data
 end
 
+
+# task :import_english_idioms => [:environment] do #why is this separate from import_english_verbs?
+#   language=Lng.find_by_cod('eng')
+#   basedir = Rails.root.to_s + "/lib/text_files"
+#
+#   ['verb', 'preposition'].each do | word |
+#
+#    file = File.new(basedir +'/idiomatic_verbs.txt', "r")
+#    while (line = file.gets)
+#    line= line.gsub(/\r/,"")
+#    puts line
+#
+#    Ido.find_or_initialize_by(:ido=>line, :lng_id=>language.id, :kind=>).save!
+#    # c=c+1
+#   end
+# end
+
+task :import_english_tenses => [:environment] do #why is this separate from import_english_verbs?
+  c=1
+  language=Lng.find_by_cod('eng')
+
+  tiempos=["infinitive","gerund","participle","past"]
+  tiempos.each do |tiempo|
+    Tiempo.find_or_initialize_by(:tiempo=>tiempo, :lng_id=>language.id, :priority=>c).save!
+    c=c+1
+  end
+  c=1
+  basedir = Rails.root.to_s + "/lib/text_files"
+   file = File.new(basedir +'/english_tenses.txt', "r")
+   while (line = file.gets)
+   line= line.gsub(/\n/,"")
+   line= line.gsub(/\r/,"")
+   line.downcase!
+   (tense,example,explanation)=line.split(/\t/)
+
+   # t =  Tense.find(:first,:conditions=>["tense=?","#{tense}"])
+   # t =  Tense.new(:tense=>"#{tense}", :lng_id=>language.id, :priority=>c).save if !t
+
+       Tense.find_or_initialize_by(:tense=>tense, :lng_id=>language.id, :priority=>c).save!
+   c=c+1
+  end
+end
+
+task :import_english_verbs => [:environment] do
+  basedir = Rails.root.to_s + "/lib/text_files"
+  file = File.new(basedir +"/english_verbs.txt", "r")
+  language_id=Lng.find_by_cod('eng').id
+
+  ActiveRecord::Migration.execute("delete from cons where lng_id = #{language_id};")
+  ActiveRecord::Migration.execute("delete from verbs where lng_id = #{language_id};")
+  ActiveRecord::Migration.execute("delete from tiempos where lng_id = #{language_id};")
+
+  while (line = file.gets)
+    line = line.gsub(/\n/,'')
+    line = line.gsub(/\r/,'')
+    line = line.gsub(/\t\s+/,"\t")
+    line.downcase!
+    (verb,conjugation,tiempo)=line.split(/\t/)
+    v=Verb.find_or_initialize_by(:verb=>verb,:lng_id=>language_id)
+    v.save!
+
+    t =  Tiempo.find_or_initialize_by(:tiempo=>tiempo,:lng_id=>language_id)
+    t.save!
+    c=Con.new(:verb_id=>v.id,:lng_id=>language_id,:tiempo_id=>t.id,:con=>conjugation).save!
+  end
+end
+
+
 #rake import_verbs language=spanish --trace
 #rake import_verbs language=french --trace
 task :import_verbs => [:environment] do
