@@ -170,7 +170,7 @@ task :create_clauses => [:environment] do
       claid_capid = k.split("::") #claid_capid[0] is really cla-mood_id_tense_id
       #add native language record for languages_words
       unless cla_id_language_id["#{cla_id[claid_capid[0]]}^#{language_id}"]  #cla_id key is clause-mood_id_tense_id
-        ActiveRecord::Migration.execute("insert into clas_lngs(created_at, updated_at,cla_id,lng_id,olng_id)values('#{createdAt}', '#{createdAt}', #{cla_id[claid_capid[0]]},#{language_id},#{language_id});")
+        ActiveRecord::Migration.execute("insert into clas_lngs(cla_id,lng_id,olng_id)values(#{cla_id[claid_capid[0]]},#{language_id},#{language_id});")
         cla_id_language_id["#{cla_id[claid_capid[0]]}^#{language_id}"]=1
       end
       #add all languages that belong to cap's name
@@ -189,7 +189,7 @@ task :create_clauses => [:environment] do
 
       cap.nam.lngs.each do |l|
         unless cla_id_language_id["#{cla_id[claid_capid[0]]}^#{l.id}"]
-          ActiveRecord::Migration.execute("insert into clas_lngs(created_at, updated_at, cla_id,lng_id,olng_id)values('#{createdAt}', '#{createdAt}', #{cla_id[claid_capid[0]]},#{l.id},#{language_id});")
+          ActiveRecord::Migration.execute("insert into clas_lngs(cla_id,lng_id,olng_id)values(#{cla_id[claid_capid[0]]},#{l.id},#{language_id});")
           cla_id_language_id["#{cla_id[claid_capid[0]]}^#{l.id}"]=1
         end
       end
