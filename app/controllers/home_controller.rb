@@ -45,36 +45,4 @@ class HomeController < ApplicationController
     #  }
     #end
   end
-  def save_cut
-    puts ENV.fetch("USER_CODE")
-    nam = params[:name].gsub('_', ' ')
-    num = params[:num]
-    start = params[:start].gsub('-', '.')
-    stop = params[:stop].gsub('-', '.')
-    user_id = params[:user_code]
-    if ENV.fetch("USER_CODE")===user_id then
-      puts nam
-      nam_id = Nam.find_by(nam: nam).id
-      cap = Cap.find_by(nam_id: nam_id, num: num)
-      cut = Cut.find_by(nam: nam, num: num, user_id: user_id)
-      if !cut and cap then
-        Cut.create(cap: cap, start: start, stop: stop, user_id: user_id, nam: nam, num: num, hashed_ip: request.remote_ip.hash)
-      elsif cut && cap
-        cut.update(start: start, stop: stop)
-      end
-      render json: {message: 'cut updated'}
-    else
-      render json: {error: 'not authorized'}
-    end
-
-    #if Rails.cache.exist?("conjugation-#{params[:conjugation]}")
-    #  render json: Rails.cache.read("conjugation-#{params[:conjugation]}")
-    #else
-    #  #verbs = Tense.return_tense_verbs(Tense.where(tense: "#{params[:tense]}").first.id, englishId)
-    #  render json: Rails.cache.fetch("conjugation-#{params[:conjugation]}", :expires_in => 3.days) {
-    #    conjugations.map{ |e|  e[:cla]}
-
-    #  }
-    #end
-  end
 end

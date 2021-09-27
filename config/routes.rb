@@ -33,5 +33,5 @@ Rails.application.routes.draw do
   get 'combine/:format/:source/:name/(/:num/):start/:stop.:extenstion' => 'orders#combine' # for concating png and mp3 files on the fly
   # get 'cuts/:name/:num/:start/:stop/:user_id' => 'home#save_cut'
   get 'cuts/:nam'                                => 'cuts#cuts_by_nam' # for concating png and mp3 files on the fly
-  post 'cuts' => 'home#save_cut'
+  post 'cuts' => 'cuts#save_cut'
 end
