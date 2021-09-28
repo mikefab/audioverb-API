@@ -82,7 +82,7 @@ class NamsController < ApplicationController
     else
       nam = Nam.find_by_nam(media)
       render json: Rails.cache.fetch("captions-#{media}", :expires_in => 3.days) {
-        nam.caps.all.map{ |c| {
+        nam.caps.where("length(cap) > 20").map{ |c| {
             cap: c.cap,
             num: c.num,
             start: c.start,

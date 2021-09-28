@@ -9,8 +9,12 @@ Rails.application.routes.draw do
       end
     end
   get 'languages'                => 'lngs#languages'
-  get 'idioms/:language'                => 'entries#idioms'
-  get 'idioms/media/:media'                => 'entries#idioms_by_media'
+  get 'yu/:kind'                => 'entries#yu'
+  get 'yu/:kind/media/:media'                => 'entries#yu_by_media'
+  # get 'duanyu/:language                => 'entries#duanyu'
+  # get 'duanyu/media/:media'                => 'entries#duanyu_by_media'
+
+
   get 'nam/:nam'                => 'nams#caps_by_nam'
   get 'nams/'                => 'nams#all'
   get 'nams/:language'                        => 'nams#list'

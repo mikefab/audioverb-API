@@ -1,22 +1,23 @@
 class EntriesController < ApplicationController
 
-  def idioms
-    if params[:language].match(/chinese/)
+  def yu
+      kind = params[:kind]
       lng = Lng.where(cod: 'chi_hans').first
-      @idioms = lng.entries.all
+
+      @yu = lng.entries.where(is_idiom: !!kind.match(/chengyu/))
       return render json: {
-        idioms: @idioms.sort_by{|e| e[:kanji_id]}.map{ |idiom| idiom.entry}
+        yu: @yu.sort_by{|e| e[:kanji_id]}.map{ |yu| yu.entry}.uniq
       }
-    end
     render json: {message: 'empty'}
   end
 
-  def idioms_by_media
+  def yu_by_media
+    kind = params[:kind]
     if params[:media]
       nam = Nam.where(nam: params[:media]).first
-      @idioms = nam.entries.all
+      @idioms = nam.entries.where(is_idiom: !!kind.match(/chengyu/))
       return render json: {
-        idioms: @idioms.sort_by{|e| e[:kanji_id]}.map{ |idiom| idiom.entry}
+        yu: @idioms.sort_by{|e| e[:kanji_id]}.map{ |idiom| idiom.entry}
       }
     end
     render json: {message: 'empty'}

@@ -1,3 +1,99 @@
+#RAILS_ENV=production scan_idioms kind=v --trace
+task :scan_idioms=>[:environment] do
+  id_lng = Hash.new
+  Lng.all.each do |l|
+    id_lng[l.id] = l
+  end
+
+  english_id=Lng.find_by_cod('eng').id
+  hash=Hash.new() #where used?
+  print "make array of verbs that are first words in idioms\n"
+  idiom_verbs=Hash.new()
+  idos = Ido.where(kind: ENV['kind'])
+  idos.each do |i| #kind is p or v
+    a_idiom = i.ido.split(/\s+/) #break idiom into array based on spaces
+    idiom_verbs[a_idiom[0]]=1    #first word
+  end
+
+  count=0
+  #print "Create hash names, values being arays of their languages\n"
+  #print "creating names hash\n"
+  #names=Hash.new()
+  # Nam.where(lng_id: english_id).each do |n|
+  #   if n.lngs.size>0
+  #     names[n.id] = Array.new()
+  #     n.lngs.each do |l|
+  #       names[n.id] << l.id
+  #     end
+  #       names[n.id]<<english_id
+  #       names[n.id].uniq!
+  #   end
+  # end
+  print "put only verbs used in front of idioms in memory with their conjugations. Trying to save ram\n"
+  Verb.where(lng_id: english_id).each do |v|
+#    print "verb: #{v.verb}\n"
+    if idiom_verbs[v.verb] then
+      if v.verb.match(/(o$|h$)/i) then
+        hash[v.verb]="(#{v.verb}es|" if v.verb!="be"
+      elsif v.verb=="be" then
+        hash[v.verb]="("
+      else
+        hash[v.verb]="(#{v.verb}s|"
+      end
+      v.cons.each do |c|
+        hash[v.verb] = hash[v.verb] + "#{c.con}|" if c.lng_id==english_id
+      end
+      hash[v.verb] = hash[v.verb] + "am|are|is|'s|'m|'re" if v.verb=="be"
+      hash[v.verb] = hash[v.verb]+")"
+      hash[v.verb].gsub!(/\|\)/,")")
+    end
+  end
+
+  c=0
+  total_idioms = Ido.all.size
+  puts total_idioms
+  puts "!!!!!"
+  idos.each do |i|
+    idiom = "#{i.ido}"
+    language_count=Hash.new()
+ #   print "IDIOM: #{i.ido}\n"
+    c+=1
+#    print "#{c} of #{total_idioms} #{i.ido} #{i.id}\n"
+    a_idiom = i.ido.split(/\s+/)
+    idiom.gsub!(/#{a_idiom[0]}/,"#{hash[a_idiom[0]]}") if hash[a_idiom[0]]
+    idiom.gsub!(/one's/,"(my|his|hers|their|your|our|one's)")
+    idiom.gsub!(/oneself/,"(myself|yourself|hisself|himself|herself|theirselves|ourselves|yourselves)")
+    sphinx_idiom = idiom.gsub(/\s+/," << ")
+    count=count+1
+    #puts "____"
+    #puts sphinx_idiom
+    caps =Cap.search("#{sphinx_idiom}", :with=>{:lng_id=>english_id},:per_page=>1000)
+
+
+
+# Cap.search("(aims|aim|aiming|aimed|aimed) NEAR/1 << high", :with=>{:lng_id=>english_id},:per_page=>1000)
+
+    caps.each do |cap|
+      puts "#{i.ido} #{sphinx_idiom} *** #{cap.cap}"
+     #  if names[cap.nam_id]
+     # #   print "cap.nam_id: #{names[cap.nam_id]}\n"
+     #    names[cap.nam_id].each do |lang_id|
+     #    unless i.lngs.include?(id_lng[lang_id])
+     #     # print "lll #{id_lng[lang_id].lng}\n"
+     #      i.lngs << id_lng[lang_id]
+     #      i.save!
+     #    #  print "#{i.lngs} lll\n"
+     #    end
+     #     end #end loop through each e in name_id array
+     #  end #end if name_id array exists
+    end #end of caps loop
+  end #end of idiom loop
+  Rails.cache.clear()
+end
+
+
+
+
 #SPANISH!
 #bundle exec rake create_clauses language=spa --trace
 task :create_clauses => [:environment] do
@@ -206,7 +302,8 @@ end
 #Also saves cap media tags in tags_vocs
 task :chinese_idioms =>[:environment] do
   lng_id = Lng.where(cod: 'chi_hans').first.id
-  Entry.where(is_idiom: true).all.each do |idiom|
+  # Entry.where(is_idiom: true).all.each do |idiom|
+  Entry.where("length(entry) > 8").all.each do |idiom|
     second = idiom.entry.split("，")[1]
     caps = Cap.search "\"#{idiom.entry}\"", :match_mode=>:extended, :with=>{:lng_id=>lng_id},:per_page=>3000
     if caps.length > 0 then
