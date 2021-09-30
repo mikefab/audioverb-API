@@ -29,7 +29,7 @@ task :import_prepositions => [:environment] do #why is this separate from import
   basedir = Rails.root.to_s + "/lib/text_files"
 
 
-   file = File.new(basedir + "/#{language.lng}_prepositions.txt", "r")
+   file = File.new(basedir + "/#{language.lng.downcase!}_prepositions.txt", "r")
    while (line = file.gets)
    line= line.gsub(/\n/,"")
    line= line.gsub(/\r/,"")
