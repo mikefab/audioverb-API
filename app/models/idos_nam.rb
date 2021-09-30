@@ -1,0 +1,2 @@
+class IdosNam < ApplicationRecord
+end

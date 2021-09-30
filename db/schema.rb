@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_09_24_000127) do
+ActiveRecord::Schema.define(version: 2021_09_30_211834) do
 
   create_table "acts", charset: "utf8mb4", force: :cascade do |t|
     t.integer "user_id"
@@ -75,8 +75,6 @@ ActiveRecord::Schema.define(version: 2021_09_24_000127) do
     t.integer "cla_id"
     t.integer "lng_id"
     t.integer "olng_id"
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
     t.index ["cla_id"], name: "index_clas_lngs_on_cla_id"
     t.index ["lng_id"], name: "index_clas_lngs_on_lng_id"
     t.index ["olng_id"], name: "index_clas_lngs_on_olng_id"
@@ -161,8 +159,15 @@ ActiveRecord::Schema.define(version: 2021_09_24_000127) do
     t.string "ido"
     t.string "kind"
     t.integer "lng_id"
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
+    t.index ["ido"], name: "index_idos_on_ido"
+    t.index ["kind"], name: "index_idos_on_kind"
+    t.index ["lng_id"], name: "index_idos_on_lng_id"
+  end
+
+  create_table "idos_nams", charset: "latin1", force: :cascade do |t|
+    t.integer "nam_id"
+    t.integer "ido_id"
+    t.index ["nam_id"], name: "index_idos_nams_on_nam_id"
   end
 
   create_table "kanjis", charset: "utf8mb4", force: :cascade do |t|
@@ -237,11 +242,22 @@ ActiveRecord::Schema.define(version: 2021_09_24_000127) do
     t.index ["upldr"], name: "index_nams_on_upldr"
   end
 
+  create_table "nams_preps", charset: "latin1", force: :cascade do |t|
+    t.integer "nam_id"
+    t.integer "prep_id"
+    t.index ["nam_id"], name: "index_nams_preps_on_nam_id"
+  end
+
   create_table "nams_vocs", charset: "utf8mb4", force: :cascade do |t|
     t.integer "nam_id"
     t.integer "voc_id"
     t.index ["nam_id"], name: "index_nams_vocs_on_nam_id"
     t.index ["voc_id"], name: "index_nams_vocs_on_voc_id"
+  end
+
+  create_table "preps", charset: "latin1", force: :cascade do |t|
+    t.string "prep"
+    t.integer "lng_id"
   end
 
   create_table "srcs", charset: "utf8mb4", force: :cascade do |t|

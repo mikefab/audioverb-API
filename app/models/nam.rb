@@ -2,9 +2,11 @@ class Nam < ApplicationRecord
   has_and_belongs_to_many :lngs, :join_table => "lngs_nams"
   has_many :caps
   has_many :cuts
+  has_and_belongs_to_many :idos, :join_table => "idos_nams"
   belongs_to :lng
   has_and_belongs_to_many :vocs, :join_table => "nams_vocs"
   has_and_belongs_to_many :entries, :join_table => "entries_nams"
+  has_and_belongs_to_many :preps, :join_table => "nams_preps"
 
   def self.decode(nam)
     # params[:nam] could be some_tv_show_4_3x

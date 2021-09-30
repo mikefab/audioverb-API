@@ -6,21 +6,40 @@ task :add_languages => [:environment] do
 end
 
 
-# task :import_english_idioms => [:environment] do #why is this separate from import_english_verbs?
-#   language=Lng.find_by_cod('eng')
-#   basedir = Rails.root.to_s + "/lib/text_files"
-#
-#   ['verb', 'preposition'].each do | word |
-#
-#    file = File.new(basedir +'/idiomatic_verbs.txt', "r")
-#    while (line = file.gets)
-#    line= line.gsub(/\r/,"")
-#    puts line
-#
-#    Ido.find_or_initialize_by(:ido=>line, :lng_id=>language.id, :kind=>).save!
-#    # c=c+1
-#   end
-# end
+task :import_english_idioms => [:environment] do #why is this separate from import_english_verbs?
+  language=Lng.find_by_cod('eng')
+  basedir = Rails.root.to_s + "/lib/text_files"
+
+  ['verbs', 'prepositions', 'expressions'].each do | word |
+
+     file = File.new(basedir + "/idiomatic_#{word}.txt", "r")
+     while (line = file.gets)
+     line= line.gsub(/\n/,"")
+     line= line.gsub(/\r/,"")
+     puts line
+
+     Ido.find_or_initialize_by(:ido=>line, :lng_id=>language.id, :kind=>word[0]).save!
+     # c=c+1
+   end
+  end
+end
+
+task :import_prepositions => [:environment] do #why is this separate from import_english_verbs?
+  language= Lng.where(%Q/lng="#{ENV['language']}"/).first
+  basedir = Rails.root.to_s + "/lib/text_files"
+
+
+   file = File.new(basedir + "/#{language.lng}_prepositions.txt", "r")
+   while (line = file.gets)
+   line= line.gsub(/\n/,"")
+   line= line.gsub(/\r/,"")
+   puts line
+
+   Prep.find_or_initialize_by(:prep=>line, :lng_id=>language.id).save!
+   # c=c+1
+  end
+end
+
 
 task :import_english_tenses => [:environment] do #why is this separate from import_english_verbs?
   c=1

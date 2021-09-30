@@ -1,0 +1,2 @@
+class NamsPrep < ApplicationRecord
+end

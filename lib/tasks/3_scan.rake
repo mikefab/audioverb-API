@@ -1,34 +1,16 @@
 #RAILS_ENV=production scan_idioms kind=v --trace
 task :scan_idioms=>[:environment] do
-  id_lng = Hash.new
-  Lng.all.each do |l|
-    id_lng[l.id] = l
-  end
-
   english_id=Lng.find_by_cod('eng').id
-  hash=Hash.new() #where used?
+  hash=Hash.new()  #"check"=>"(checks|check|checking|checked|checked)"
   print "make array of verbs that are first words in idioms\n"
   idiom_verbs=Hash.new()
-  idos = Ido.where(kind: ENV['kind'])
+  idos = Ido.all #where(kind: ENV['kind'])
   idos.each do |i| #kind is p or v
     a_idiom = i.ido.split(/\s+/) #break idiom into array based on spaces
     idiom_verbs[a_idiom[0]]=1    #first word
   end
 
   count=0
-  #print "Create hash names, values being arays of their languages\n"
-  #print "creating names hash\n"
-  #names=Hash.new()
-  # Nam.where(lng_id: english_id).each do |n|
-  #   if n.lngs.size>0
-  #     names[n.id] = Array.new()
-  #     n.lngs.each do |l|
-  #       names[n.id] << l.id
-  #     end
-  #       names[n.id]<<english_id
-  #       names[n.id].uniq!
-  #   end
-  # end
   print "put only verbs used in front of idioms in memory with their conjugations. Trying to save ram\n"
   Verb.where(lng_id: english_id).each do |v|
 #    print "verb: #{v.verb}\n"
@@ -50,42 +32,41 @@ task :scan_idioms=>[:environment] do
   end
 
   c=0
-  total_idioms = Ido.all.size
-  puts total_idioms
-  puts "!!!!!"
+
   idos.each do |i|
+    if i.ido.match(/be it/) then
+      next
+    end
     idiom = "#{i.ido}"
     language_count=Hash.new()
  #   print "IDIOM: #{i.ido}\n"
     c+=1
-#    print "#{c} of #{total_idioms} #{i.ido} #{i.id}\n"
+
     a_idiom = i.ido.split(/\s+/)
     idiom.gsub!(/#{a_idiom[0]}/,"#{hash[a_idiom[0]]}") if hash[a_idiom[0]]
     idiom.gsub!(/one's/,"(my|his|hers|their|your|our|one's)")
     idiom.gsub!(/oneself/,"(myself|yourself|hisself|himself|herself|theirselves|ourselves|yourselves)")
-    sphinx_idiom = idiom.gsub(/\s+/," << ")
+    sphinx_idiom = ''
+    if i.kind.match('e') then
+      sphinx_idiom = idiom.sub(/!+\s*$/,'').sub(/\s*-\s*(The|A)/,'')
+    else
+      sphinx_idiom = idiom.gsub(/\s+/," << ")#.sub(/\s*<<\s*$/, '').sub(/<<\s*-\s*<</, '-')
+    end
     count=count+1
-    #puts "____"
-    #puts sphinx_idiom
     caps =Cap.search("#{sphinx_idiom}", :with=>{:lng_id=>english_id},:per_page=>1000)
-
+    #puts sphinx_idiom
 
 
 # Cap.search("(aims|aim|aiming|aimed|aimed) NEAR/1 << high", :with=>{:lng_id=>english_id},:per_page=>1000)
 
     caps.each do |cap|
-      puts "#{i.ido} #{sphinx_idiom} *** #{cap.cap}"
-     #  if names[cap.nam_id]
-     # #   print "cap.nam_id: #{names[cap.nam_id]}\n"
-     #    names[cap.nam_id].each do |lang_id|
-     #    unless i.lngs.include?(id_lng[lang_id])
-     #     # print "lll #{id_lng[lang_id].lng}\n"
-     #      i.lngs << id_lng[lang_id]
-     #      i.save!
-     #    #  print "#{i.lngs} lll\n"
-     #    end
-     #     end #end loop through each e in name_id array
-     #  end #end if name_id array exists
+      if (cap.cap.match(/#{idiom}/)) then
+          puts "#{i.ido} | #{sphinx_idiom} | #{idiom} | #{cap.cap}"
+          IdosNam.find_or_create_by(
+            ido_id: i.id,
+            nam_id: cap.nam.id,
+          )
+      end
     end #end of caps loop
   end #end of idiom loop
   Rails.cache.clear()
@@ -311,6 +292,28 @@ task :chinese_idioms =>[:environment] do
         puts cap.nam.nam
         EntriesNam.find_or_create_by(
           entry_id: idiom.id,
+          nam_id: cap.nam.id,
+        )
+      end
+    end
+  end
+end
+
+
+#Goes through vocab table, searching words and noting caption languages it's been translated to
+#Also saves cap media tags in tags_vocs
+task :scan_prepositions =>[:environment] do
+  lng_id = Lng.where(cod: ENV['language']).first.id
+  # Entry.where(is_idiom: true).all.each do |idiom|
+  Prep.where(lng_id: lng_id).all.each do |prep|
+    puts "#{prep.prep} #{lng_id}!!!"
+    #second = idiom.entry.split("，")[1]
+    caps = Cap.search "\"#{prep.prep}\"", :match_mode=>:extended, :with=>{:lng_id=>lng_id},:per_page=>3000
+    if caps.length > 0 then
+      caps.each do | cap |
+        puts cap.nam.nam
+        NamsPrep.find_or_create_by(
+          prep_id: prep.id,
           nam_id: cap.nam.id,
         )
       end

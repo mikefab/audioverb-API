@@ -15,7 +15,14 @@ Rails.application.routes.draw do
   # get 'duanyu/media/:media'                => 'entries#duanyu_by_media'
 
 
+  get 'preps/:lng'                => 'preps#preps'
+  get 'preps/nam/:nam'                => 'preps#preps_by_nam'
+
+  get 'idioms/:lng'                => 'idos#idos'
+  get 'idioms/nam/:nam'                => 'idos#idos_by_nam'
+
   get 'nam/:nam'                => 'nams#caps_by_nam'
+
   get 'nams/'                => 'nams#all'
   get 'nams/:language'                        => 'nams#list'
   get 'grams/list/:gram'                       => 'home#grams'
