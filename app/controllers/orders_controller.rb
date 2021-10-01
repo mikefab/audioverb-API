@@ -7,16 +7,12 @@ class OrdersController < ApplicationController
   end
 
   def combine
-    if params[:source].match(/\^/) then
-      (source,name,start,stop,format)=params[:source].split(/\^/)
-    else
-      source  = params[:source]
-      name    = params[:name]
-      num    = params[:num]
-      start   = params[:start].gsub('_', '.')
-      stop    = params[:stop].gsub('_', '.')
-      format  = params[:format]
-    end
+    source  = params[:source]
+    name    = params[:name]
+    num    = params[:num]
+    start   = params[:start].gsub('_', '.')
+    stop    = params[:stop].gsub('_', '.')
+    format  = params[:format]
     stop = stop.to_i if stop.to_s.match(/\.0/)
     start = start.to_i if start.to_s.match(/\.0/)
 
@@ -37,6 +33,7 @@ class OrdersController < ApplicationController
           command = command + " > #{start}~#{stop}_#{name}.mp3"
         end
       end
+
       system("cd public/#{format}/#{source}/#{name}; #{command}")
       redirect_to "/#{format}/#{source}/#{name}/#{start}~#{stop}_#{name}.#{format}?num=#{num}"
     else

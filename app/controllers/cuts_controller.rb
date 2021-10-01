@@ -16,6 +16,7 @@ class CutsController < ApplicationController
   end
 
   def save_cut
+
     nam = params[:name].gsub('_', ' ')
     num = params[:num]
     start = params[:start].gsub('-', '.')
@@ -28,14 +29,14 @@ class CutsController < ApplicationController
 
     if cap and !cut then
       # Cap is being cut for first time. Let anyone do it.
-      Cut.create(cap: cap, start: start, stop: stop, user_id: user_id || 0, nam: nam, num: num, hashed_ip: request.remote_ip.hash, approved: approvable)
+      Cut.create(cap_id: cap.id.to_i, start: start, stop: stop, user_id: user_id || 0, nam: nam, num: num.to_i, hashed_ip: request.remote_ip.hash, approved: approvable)
       return  render json: {message: 'cut updated'}
     end
     if cap && cut
 
       # Cap exists. If cut by admin, only update if this cut is submitted by admin
       if approved_user(user_id) then
-        cut.update(start: start, stop: stop, approved: approved)
+        cut.update(start: start, stop: stop, approved: approvable)
         return  render json: {message: 'cut updated'}
       end
       # Person is not admin, they cannot overwrite an approved cut
