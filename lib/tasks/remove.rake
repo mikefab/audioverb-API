@@ -3,13 +3,16 @@ task :remove_cuts=>[:environment] do
   Cut.all.each do |cut|
     caps = Cap.where(id: cut.cap_id)
     if (caps.length === 0) then
-      puts cut.cap_id
-      cut.destroy!
-    end
-    if (caps.first.num.to_i != cut.num.to_i) then
+      puts "Destroy #{cut.id} with #{cut.cap_id} because no cap"
       cut.destroy!
     else
-      puts "#{caps.first.num.to_i} #{cut.num.to_i}"
+      cap = caps.first
+      if (cap.num.to_i != cut.num.to_i) then
+        puts "Destroy #{cut.id} because nums don't match: #{cap.num.to_i} != #{cut.num.to_i}"
+        cut.destroy!
+      else
+        puts "GOOD: #{cap.num.to_i} #{cut.num.to_i}"
+      end
     end
   end
 end
