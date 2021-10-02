@@ -92,6 +92,7 @@ task :create_clauses => [:environment] do
     "armas" => 1,
     "ayuda" => 1,
     "baja" => 1,
+    "base" => 1,
     "bajo" => 1,
     "calle" => 1,
     "cambio" => 1,
