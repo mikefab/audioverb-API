@@ -1,3 +1,19 @@
+
+task :remove_cuts=>[:environment] do
+  Cut.all.each do |cut|
+    caps = Cap.where(id: cut.cap_id)
+    if (caps.length === 0) then
+      puts cut.cap_id
+      cut.destroy!
+    end
+    if (caps.first.num.to_i != cut.num.to_i) then
+      cut.destroy!
+    else
+      puts "#{caps.first.num.to_i} #{cut.num.to_i}"
+    end
+  end
+end
+
 task :remove_name => [:environment] do
   puts "#{ENV['nam']} !!!"
   nam    = Nam.find_by_nam(ENV['nam'])
@@ -30,7 +46,7 @@ task :remove_name => [:environment] do
   # end #clas loop per nam
 
 
-  ActiveRecord::Migration.execute("select voc_id from nams_vocs where nam_id=#{nam.id}").each do |v|
+  ActiveRecord::Migration.execute("select voc_id from nams_vocs where nam_id='#{nam.id}''").each do |v|
 #    print "#{voc.voc}\n"
     voc = Voc.find(v[0])
     seen_lngs  = Hash.new()
