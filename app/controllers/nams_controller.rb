@@ -8,11 +8,12 @@ class NamsController < ApplicationController
     #flare = Nam.to_flare(params[:search])
     media  = params[:media]
     search = params[:search]
+    is_idiom = params[:is_idiom]
 
     if Rails.cache.exist?("nam-search-#{media}-#{search}")
       render json: Rails.cache.read("nam-search-#{media}-#{search}")
     else
-      render json: Rails.cache.fetch("nam-search-#{media}-#{search}", :expires_in => 3.days){ Nam.to_flare_single(media, search)}
+      render json: Rails.cache.fetch("nam-search-#{media}-#{search}", :expires_in => 3.days){ Nam.to_flare_single(media, search, false)}
     end
     #render json: flare #Nam.search("\"#{params[:search]}\"").to_json(:search => params[:search])
   end
