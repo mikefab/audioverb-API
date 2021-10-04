@@ -97,12 +97,13 @@ class NamsController < ApplicationController
   end
   def search
     search = params[:search]
+    is_idiom = params[:is_idiom]
     lng_id = Lng.where(cod: params[:lng]).first.id
 
     if Rails.cache.exist?("search-#{lng_id}-#{search}")
       render json: Rails.cache.read("search-#{lng_id}-#{search}")
     else
-      render json: Rails.cache.fetch("search-#{lng_id}h-#{search}", :expires_in => 3.days){ Nam.to_flare(search, lng_id)}
+      render json: Rails.cache.fetch("search-#{lng_id}h-#{search}", :expires_in => 3.days){ Nam.to_flare(search, lng_id, is_idiom)}
     end
     #render json: flare #Nam.search("\"#{params[:search]}\"").to_json(:search => params[:search])
   end

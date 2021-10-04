@@ -158,6 +158,7 @@ ActiveRecord::Schema.define(version: 2021_09_30_211834) do
   create_table "idos", charset: "latin1", force: :cascade do |t|
     t.string "ido"
     t.string "kind"
+    t.string "pattern"
     t.integer "lng_id"
     t.index ["ido"], name: "index_idos_on_ido"
     t.index ["kind"], name: "index_idos_on_kind"

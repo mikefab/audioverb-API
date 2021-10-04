@@ -53,18 +53,19 @@ class Nam < ApplicationRecord
     self.caps.last
   end
 
-  def get_caps_by_search(search)
+  def get_caps_by_search(search, is_idiom)
     #self.caps.search(search, :match_mode=>:phrase, :per_page=>3)
     #self.caps.search('"'+ search + '"', :per_page => 25, :match_mode => :extended)
-
-    self.caps.search "#{search}", :per_page => 25
+    term = is_idiom ? Ido.where(ido: search).first.pattern.gsub('<<', 'NEAR/1') : search
+    puts "#{term} ... ttt"
+    self.caps.search "#{term}", :per_page => 25
     #self.caps.search('"'+ search + '"', :per_page => 25)
   end
 
-  def self.to_flare_single(nam, term)
+  def self.to_flare_single(nam, term, is_idiom)
     nam = Nam.find_by_nam(nam)
     h = {name: 'flare', size: 1000, children: []}
-    caps = nam.get_caps_by_search(term).map { |i| {
+    caps = nam.get_caps_by_search(term, is_idiom).map { |i| {
         nam: i.nam.nam.gsub(/\s+/, '.'),
         num: i.num,
         start: i.start,
@@ -80,7 +81,7 @@ class Nam < ApplicationRecord
     # dramas.keys.each{|k| h[:children].push dramas[k]}
     h
   end
-  def self.to_flare(term, lng_id)
+  def self.to_flare(term, lng_id, is_idiom)
     # if media == 'all'
     #   nams = Nam.search(term)
     # else
@@ -91,7 +92,7 @@ class Nam < ApplicationRecord
     h = {name: 'flare', size: 1000, children: []}
     dramas = {}
     nams.each do |n|
-      caps = n.get_caps_by_search(term).map{ |i| {
+      caps = n.get_caps_by_search(term, is_idiom).map{ |i| {
         nam: i.nam.nam.gsub(/\s+/, '.'),
         num: i.num,
         start: i.start,

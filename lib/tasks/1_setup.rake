@@ -18,7 +18,7 @@ task :import_english_idioms => [:environment] do #why is this separate from impo
      line= line.gsub(/\r/,"")
      puts line
 
-     Ido.find_or_initialize_by(:ido=>line, :lng_id=>language.id, :kind=>word[0]).save!
+     Ido.find_or_initialize_by(:ido=>line.downcase, :lng_id=>language.id, :kind=>word[0]).save!
      # c=c+1
    end
   end

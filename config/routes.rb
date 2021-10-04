@@ -33,7 +33,7 @@ Rails.application.routes.draw do
   get 'conjugations/:verb/:lng' => 'verbs#conjugations'
   get 'caps/:nam/:num'                         => 'caps#cap_by_nam_num'
   get 'caps/:nam/:num(/:num_records)'          => 'caps#cap_by_nam_num_group'
-  get 'search/:lng/:media/:search'             => 'nams#search_by_nam'
+  get 'search/media/:media/:search'             => 'nams#search_by_nam'
   get 'search/:lng/:search'                    => 'nams#search'
 #  get 'tenses/:language/:media'                => 'home#tenses'
   get 'tenses/:language'                => 'tenses#tenses'

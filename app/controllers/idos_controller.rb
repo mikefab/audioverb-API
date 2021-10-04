@@ -4,7 +4,7 @@ class IdosController < ApplicationController
       lng = Lng.where(lng: params[:lng]).first
       @idos = lng.idos.all
       return render json: {
-        prepositions: @idos.sort().map{ |i| i.ido}.uniq
+        idioms: @idos.sort().map{ |i| i.ido}.uniq
       }
     render json: {message: 'empty'}
   end

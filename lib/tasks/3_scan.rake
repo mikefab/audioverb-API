@@ -4,16 +4,14 @@ task :scan_idioms=>[:environment] do
   hash=Hash.new()  #"check"=>"(checks|check|checking|checked|checked)"
   print "make array of verbs that are first words in idioms\n"
   idiom_verbs=Hash.new()
-  idos = Ido.all #where(kind: ENV['kind'])
+  idos = Ido.all #.where(kind: 'e')
   idos.each do |i| #kind is p or v
     a_idiom = i.ido.split(/\s+/) #break idiom into array based on spaces
     idiom_verbs[a_idiom[0]]=1    #first word
   end
-
   count=0
   print "put only verbs used in front of idioms in memory with their conjugations. Trying to save ram\n"
   Verb.where(lng_id: english_id).each do |v|
-#    print "verb: #{v.verb}\n"
     if idiom_verbs[v.verb] then
       if v.verb.match(/(o$|h$)/i) then
         hash[v.verb]="(#{v.verb}es|" if v.verb!="be"
@@ -28,36 +26,55 @@ task :scan_idioms=>[:environment] do
       hash[v.verb] = hash[v.verb] + "am|are|is|'s|'m|'re" if v.verb=="be"
       hash[v.verb] = hash[v.verb]+")"
       hash[v.verb].gsub!(/\|\)/,")")
+      #puts hash[v.verb]
     end
   end
-
+  puts hash
   c=0
-
   idos.each do |i|
     if i.ido.match(/be it/) then
       next
     end
-    idiom = "#{i.ido}"
+    idiom = "#{i.ido.downcase}"
     language_count=Hash.new()
- #   print "IDIOM: #{i.ido}\n"
     c+=1
 
-    a_idiom = i.ido.split(/\s+/)
+    a_idiom = i.ido.downcase.split(/\s+/)
+    puts "#{a_idiom[0]} - #{hash[a_idiom[0]]} -  #{idiom}"
     idiom.gsub!(/#{a_idiom[0]}/,"#{hash[a_idiom[0]]}") if hash[a_idiom[0]]
-    idiom.gsub!(/one's/,"(my|his|hers|their|your|our|one's)")
+
+    idiom.gsub!(/someone/,"(me|him|her|them|you|them|someone)")
     idiom.gsub!(/oneself/,"(myself|yourself|hisself|himself|herself|theirselves|ourselves|yourselves)")
+    if idiom.match(/one's/) then
+        idiom.gsub!(/one's/,"(my|his|her|their|your|our|one's|someone's)")
+    elsif idiom.match(/someone's/) then
+      idiom.gsub!(/someone's/,"(my|his|her|their|your|our|one's|someone's)")
+    end
+
+
+    #puts "#{idiom}-"
     sphinx_idiom = ''
     if i.kind.match('e') then
-      sphinx_idiom = idiom.sub(/!+\s*$/,'').sub(/\s*-\s*(The|A)/,'')
+      #if (idiom.match(/(.+\s*?)(-)(\s+(a|the)$)/i)) then
+      if (idiom.match(/(.+?)(\s*-\s*)(a|the)$/i)) then
+        sphinx_idiom = "#{$3} #{$1}"
+      #  puts sphinx_idiom
+      else
+        sphinx_idiom = idiom
+      end
+
     else
       sphinx_idiom = idiom.gsub(/\s+/," << ")#.sub(/\s*<<\s*$/, '').sub(/<<\s*-\s*<</, '-')
     end
+    sphinx_idiom.gsub!('!', '')
+    i.pattern = sphinx_idiom
+    i.save!
     count=count+1
-    caps =Cap.search("#{sphinx_idiom}", :with=>{:lng_id=>english_id},:per_page=>1000)
+    caps = Cap.search("#{sphinx_idiom}", :with=>{:lng_id=>english_id},:per_page=>1000)
     #puts sphinx_idiom
-
-
-# Cap.search("(aims|aim|aiming|aimed|aimed) NEAR/1 << high", :with=>{:lng_id=>english_id},:per_page=>1000)
+#
+#
+#Cap.search("(aims|aim|aiming|aimed|aimed) NEAR/1 << high", :with=>{:lng_id=>english_id},:per_page=>1000)
 
     caps.each do |cap|
       if (cap.cap.match(/#{idiom}/)) then
@@ -68,8 +85,8 @@ task :scan_idioms=>[:environment] do
           )
       end
     end #end of caps loop
-  end #end of idiom loop
-  Rails.cache.clear()
+   end #end of idiom loop
+#   Rails.cache.clear()
 end
 
 

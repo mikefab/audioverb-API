@@ -3,6 +3,7 @@ class CreateIdos < ActiveRecord::Migration[6.1]
     create_table :idos do |t|
       t.string :ido
       t.string :kind
+      t.string :pattern
       t.integer :lng_id
 
 
