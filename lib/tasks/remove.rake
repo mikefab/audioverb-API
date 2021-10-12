@@ -17,6 +17,84 @@ task :remove_cuts=>[:environment] do
   end
 end
 
+task :remove_clips=> [:environment] do
+  Nam.all.each do |n|
+
+    cap =  n.caps.first
+    temp_nam = n.nam.gsub(/\s+/, '_')
+    dir = "public/mp3/movies/#{temp_nam}/"
+    nums = []
+
+    # Remove beginning space
+    if cap.start > 5
+      i = 1
+      while i < (cap.start - 5) do
+        temp_i = i%1==0 ? i.to_int : i
+        file = "public/mp3/movies/#{temp_nam}/#{temp_i}_#{temp_nam}.mp3"
+        File.delete(file) if File.exist?(file)
+        #puts "rm public/mp3/movies/#{temp_nam}/#{temp_i}_#{temp_nam}.mp3"
+        i+=0.5
+      end
+
+      # Remove end space
+      Dir.entries(dir).select {
+        |f|
+        name = f.split('_')[0]
+        if name.match(/\d/) then
+          nums.push(name.to_f)
+        end
+      }
+      #puts "#{temp_nam} #{n.caps.last.stop} #{nums.sort().last}"
+      last_clip = nums.sort().last
+      last_cap_stop = n.caps.last.stop
+
+      if (last_clip  - last_cap_stop) > 5 then
+         i = last_cap_stop + 5
+         while i <= last_clip do
+          temp_i = i%1==0 ? i.to_int : i
+          file =  "public/mp3/movies/#{temp_nam}/#{temp_i}_#{temp_nam}.mp3"
+           #puts "rm #file}"
+           File.delete(file) if File.exist?(file)
+           i+=0.5
+         end
+      end
+
+
+      # Remove middle
+
+      ActiveRecord::Migration.execute("select start, stop, gap from (SELECT low.nam_id,
+           low.num               AS low_num,
+           high.num              AS high_num,
+           low.stop as stop,
+           high.start as start,
+           high.start - low.stop AS gap,
+           low.cap
+    FROM   caps low,
+           caps high
+    WHERE  low.nam_id = #{n.id}
+           AND high.start = (SELECT start
+                             FROM   caps
+                             WHERE  num > low.num
+                                    AND nam_id = low.nam_id
+                             ORDER  BY num
+                             LIMIT  1)
+           AND low.nam_id = high.nam_id) as thing where gap > 15;").each do |c|
+        start = c[1].to_i + 5
+        stop = c[0].to_i - 5
+        gap = c[2]
+        i = start
+        while i <= stop do
+          temp_i = i%1==0 ? i.to_int : i
+          file = "public/mp3/movies/#{temp_nam}/#{temp_i}_#{temp_nam}.mp3"
+          File.delete(file) if File.exist?(file)
+          #puts "#{c[1]} #{c[0]} rm "
+          i += 0.5
+        end
+      end
+    end
+  end
+end
+
 task :remove_name => [:environment] do
   puts "#{ENV['nam']} !!!"
   nam    = Nam.find_by_nam(ENV['nam'])
