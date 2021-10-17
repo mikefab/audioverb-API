@@ -1,0 +1,19 @@
+Simple Present	I play football every week.	Here you want to say that it happens regularly.
+Present Progressive	I'm playing football now.	Here you want to say that it is happening at the moment.
+Simple Past	I played football yesterday.	You did it yesterday, it happened in the past.
+Past Progressive	I was playing football the whole evening.	You were doing it in the past. It's not sure whether the action was finished or not.
+Present Perfect	I have just played football.	You have just finished it. So it has a connection to the present. Maybe your clothes are dirty.
+Present Perfect Progressive	I have been playing football for 2 hours.	You want to say how long you have been doing it. (You started in the past and it continues up to the present.
+Past Perfect	I had played football before Susan came.	The two actions are related to each other: you had finished to play football and after that the girl arrived.
+Past Perfect Progressive	I had been playing football when Susan came.	Here you want to point out how long you had been doing it before the girl came.
+will-future	I will play football next week.	This is a prediction, you can probably do something else.
+going to-future	I'm going to play football this afternoon.	This is a plan you've made.
+Future Progressive	I will be playing football next Sunday.	You do it every Sunday (as usual)
+Future Perfect	I will have played football by tomorrow.	You will have done it before tomorrow.
+Conditional Simple	I would play football.	You'll probably do it.
+Conditional Progressive	I would be playing football.	You'll probably do it. Here you concentrate more on the progress of the action.
+Conditional Perfect	I would have played football.	You'll probably have finished playing football at a special time in the future. Here you concentrate on the fact (football).
+Conditional Perfect Progressive	I would have been playing football.	You'll probably have finished playing football at a special time in the future. Here you concentrate on the progress of playing (football).
+Subjunctive Present
+Subjunctive Future
+Subjunctive Past
