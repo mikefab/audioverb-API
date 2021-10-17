@@ -10,8 +10,6 @@ class CreateSubs < ActiveRecord::Migration[6.0]
       t.integer :nam_id
       t.integer :src_id
       t.integer :clng_id
-
-      t.timestamps
     end
     add_index :subs, :cap_id
     add_index :subs, :clng_id

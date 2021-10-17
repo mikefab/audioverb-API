@@ -9,9 +9,6 @@ class CreateCons < ActiveRecord::Migration[6.0]
       t.integer :lng_id
       t.integer :priority
       t.string :pronoun
-
-
-      t.timestamps
     end
     add_index :cons, :con
     add_index :cons, :tense_id

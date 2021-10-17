@@ -34,8 +34,6 @@ ActiveRecord::Schema.define(version: 2021_09_30_211834) do
     t.integer "src_id"
     t.integer "wcount"
     t.integer "ccount"
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
     t.index ["cap"], name: "index_caps_on_cap"
     t.index ["lng_id"], name: "index_caps_on_lng_id"
     t.index ["nam_id"], name: "index_caps_on_nam_id"
@@ -65,8 +63,6 @@ ActiveRecord::Schema.define(version: 2021_09_30_211834) do
     t.integer "tense_id"
     t.integer "tiempo_id"
     t.integer "verb_id"
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
     t.index ["cla"], name: "index_clas_on_cla"
     t.index ["lng_id"], name: "index_clas_on_lng_id"
   end
@@ -89,8 +85,6 @@ ActiveRecord::Schema.define(version: 2021_09_30_211834) do
     t.integer "lng_id"
     t.integer "priority"
     t.string "pronoun"
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
     t.index ["con"], name: "index_cons_on_con"
     t.index ["lng_id"], name: "index_cons_on_lng_id"
     t.index ["mood_id"], name: "index_cons_on_mood_id"
@@ -149,13 +143,11 @@ ActiveRecord::Schema.define(version: 2021_09_30_211834) do
   create_table "entries_nams", charset: "utf8mb4", force: :cascade do |t|
     t.integer "nam_id"
     t.integer "entry_id"
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
     t.index ["entry_id"], name: "index_entries_nams_on_entry_id"
     t.index ["nam_id"], name: "index_entries_nams_on_nam_id"
   end
 
-  create_table "idos", charset: "latin1", force: :cascade do |t|
+  create_table "idos", charset: "utf8mb4", force: :cascade do |t|
     t.string "ido"
     t.string "kind"
     t.string "pattern"
@@ -165,7 +157,7 @@ ActiveRecord::Schema.define(version: 2021_09_30_211834) do
     t.index ["lng_id"], name: "index_idos_on_lng_id"
   end
 
-  create_table "idos_nams", charset: "latin1", force: :cascade do |t|
+  create_table "idos_nams", charset: "utf8mb4", force: :cascade do |t|
     t.integer "nam_id"
     t.integer "ido_id"
     t.index ["nam_id"], name: "index_idos_nams_on_nam_id"
@@ -189,8 +181,6 @@ ActiveRecord::Schema.define(version: 2021_09_30_211834) do
   create_table "lngs", charset: "utf8mb4", force: :cascade do |t|
     t.string "lng"
     t.string "cod"
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
   end
 
   create_table "lngs_nams", charset: "utf8mb4", force: :cascade do |t|
@@ -214,8 +204,6 @@ ActiveRecord::Schema.define(version: 2021_09_30_211834) do
     t.string "mood"
     t.integer "lng_id"
     t.integer "priority"
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
     t.index ["lng_id"], name: "index_moods_on_lng_id"
     t.index ["mood"], name: "index_moods_on_mood"
     t.index ["priority"], name: "index_moods_on_priority"
@@ -230,10 +218,10 @@ ActiveRecord::Schema.define(version: 2021_09_30_211834) do
     t.string "episode"
     t.string "upldr"
     t.string "title"
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
     t.string "pad_start"
     t.string "pad_end"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
     t.index ["episode"], name: "index_nams_on_episode"
     t.index ["lng_id"], name: "index_nams_on_lng_id"
     t.index ["nam"], name: "index_nams_on_nam"
@@ -243,7 +231,7 @@ ActiveRecord::Schema.define(version: 2021_09_30_211834) do
     t.index ["upldr"], name: "index_nams_on_upldr"
   end
 
-  create_table "nams_preps", charset: "latin1", force: :cascade do |t|
+  create_table "nams_preps", charset: "utf8mb4", force: :cascade do |t|
     t.integer "nam_id"
     t.integer "prep_id"
     t.index ["nam_id"], name: "index_nams_preps_on_nam_id"
@@ -256,7 +244,7 @@ ActiveRecord::Schema.define(version: 2021_09_30_211834) do
     t.index ["voc_id"], name: "index_nams_vocs_on_voc_id"
   end
 
-  create_table "preps", charset: "latin1", force: :cascade do |t|
+  create_table "preps", charset: "utf8mb4", force: :cascade do |t|
     t.string "prep"
     t.integer "lng_id"
   end
@@ -265,8 +253,6 @@ ActiveRecord::Schema.define(version: 2021_09_30_211834) do
     t.string "src"
     t.integer "lng_id"
     t.string "ser"
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
     t.index ["lng_id"], name: "index_srcs_on_lng_id"
     t.index ["ser"], name: "index_srcs_on_ser"
     t.index ["src"], name: "index_srcs_on_src"
@@ -282,8 +268,6 @@ ActiveRecord::Schema.define(version: 2021_09_30_211834) do
     t.integer "nam_id"
     t.integer "src_id"
     t.integer "clng_id"
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
     t.index ["cap_id"], name: "index_subs_on_cap_id"
     t.index ["clng_id"], name: "index_subs_on_clng_id"
   end
@@ -294,8 +278,6 @@ ActiveRecord::Schema.define(version: 2021_09_30_211834) do
     t.integer "tiempo_id"
     t.integer "lng_id"
     t.integer "priority"
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
     t.index ["lng_id"], name: "index_tenses_on_lng_id"
     t.index ["mood_id"], name: "index_tenses_on_mood_id"
     t.index ["priority"], name: "index_tenses_on_priority"
@@ -307,8 +289,6 @@ ActiveRecord::Schema.define(version: 2021_09_30_211834) do
     t.string "tiempo"
     t.integer "lng_id"
     t.integer "priority"
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
     t.index ["lng_id"], name: "index_tiempos_on_lng_id"
     t.index ["priority"], name: "index_tiempos_on_priority"
     t.index ["tiempo"], name: "index_tiempos_on_tiempo"
@@ -317,8 +297,6 @@ ActiveRecord::Schema.define(version: 2021_09_30_211834) do
   create_table "verbs", charset: "utf8mb4", force: :cascade do |t|
     t.string "verb"
     t.integer "lng_id"
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
     t.index ["lng_id"], name: "index_verbs_on_lng_id"
     t.index ["verb"], name: "index_verbs_on_verb"
   end
@@ -331,8 +309,6 @@ ActiveRecord::Schema.define(version: 2021_09_30_211834) do
     t.integer "rank"
     t.integer "raw"
     t.integer "level"
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
     t.index ["level"], name: "index_vocs_on_level"
   end
 

@@ -5,8 +5,6 @@ class CreateIdos < ActiveRecord::Migration[6.1]
       t.string :kind
       t.string :pattern
       t.integer :lng_id
-
-
     end
     add_index :idos, :ido
     add_index :idos, :kind

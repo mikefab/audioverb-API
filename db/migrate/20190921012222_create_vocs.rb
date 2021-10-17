@@ -8,8 +8,6 @@ class CreateVocs < ActiveRecord::Migration[6.0]
       t.integer :rank
       t.integer :raw
       t.integer :level
-
-      t.timestamps
     end
     add_index :vocs, :level
   end

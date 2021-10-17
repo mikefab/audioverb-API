@@ -4,8 +4,6 @@ class CreateSrcs < ActiveRecord::Migration[6.0]
       t.string :src
       t.integer :lng_id
       t.string :ser
-
-      t.timestamps
     end
     add_index :srcs, :src
     add_index :srcs, :lng_id

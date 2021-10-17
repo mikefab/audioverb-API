@@ -7,8 +7,6 @@ class CreateClas < ActiveRecord::Migration[6.0]
       t.integer :tense_id
       t.integer :tiempo_id
       t.integer :verb_id
-
-      t.timestamps
     end
     add_index :clas, :cla
     add_index :clas, :lng_id

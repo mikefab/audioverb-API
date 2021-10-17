@@ -4,8 +4,6 @@ class CreateMoods < ActiveRecord::Migration[6.0]
       t.string :mood
       t.integer :lng_id
       t.integer :priority
-
-      t.timestamps
     end
     add_index :moods, :mood
     add_index :moods, :lng_id

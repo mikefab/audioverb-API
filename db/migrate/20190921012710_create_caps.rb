@@ -10,8 +10,6 @@ class CreateCaps < ActiveRecord::Migration[6.0]
       t.integer :src_id
       t.integer :wcount
       t.integer :ccount
-
-      t.timestamps
     end
     add_index :caps, :cap
     add_index :caps, :lng_id

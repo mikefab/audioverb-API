@@ -306,7 +306,7 @@ task :import_verbs => [:environment] do
 
       (conjugation,mood,tiempo,tense) = k.split("::")
 
-      ActiveRecord::Migration.execute("insert into cons (con, created_at, updated_at,verb_id,mood_id,tiempo_id,tense_id,lng_id,pronoun) values('#{conjugation}', '#{createdAt}', '#{createdAt}',#{verb_id},#{mood_id},#{tiempo_id},#{tense_id},#{language_id},\"#{pronoun || '0'}\");") if ENV['language']=="spanish"
+      ActiveRecord::Migration.execute("insert into cons (con,verb_id,mood_id,tiempo_id,tense_id,lng_id,pronoun) values('#{conjugation}',#{verb_id},#{mood_id},#{tiempo_id},#{tense_id},#{language_id},\"#{pronoun || '0'}\");") if ENV['language']=="spanish"
     else
 #    print "#{k}\n"
          (conjugation,mood,tense,pronoun) = k.split("::")
@@ -316,7 +316,7 @@ task :import_verbs => [:environment] do
       (conjugation,mood,tense) = k.split("::")
       temp_conjugation = conjugation.gsub(/'/, "\\\\'")
       if !conjugation.match(/<img src/) then
-      ActiveRecord::Migration.execute("insert into cons (con,created_at, updated_at, verb_id,mood_id,tense_id,lng_id,pronoun) values('#{temp_conjugation}','#{createdAt}', '#{createdAt}',#{verb_id},#{mood_id},#{tense_id},#{language_id},\"#{pronoun}\");") if ENV['language']=="french"
+      ActiveRecord::Migration.execute("insert into cons (con,verb_id,mood_id,tense_id,lng_id,pronoun) values('#{temp_conjugation}',#{verb_id},#{mood_id},#{tense_id},#{language_id},\"#{pronoun}\");") if ENV['language']=="french"
     end
     end
 
@@ -332,7 +332,8 @@ task :import_chinese_grams => [:environment] do
   chinese_lng_id = Lng.where(cod:  'chi_hans')[0].id
 
   basedir = Rails.root.to_s + "/lib/text_files"
-  {"monograms" => 1, "bigrams" => 2}.each do |k, v|
+#  {"monograms" => 1, "bigrams" => 2}.each do |k, v|
+  {"bigrams" => 2}.each do |k, v|
     vocs=Hash.new()
     ActiveRecord::Migration.execute("select id, voc from vocs where gram = #{v}").each do |voc|
       vocs[voc[1]] = voc[0]
@@ -399,13 +400,13 @@ task :import_kanji => [:environment] do
       is_idiom: entry[2]
     )
     entry.save!
-    defs  = definitions.split("/")
-    defs.each do |definition|
-      next if definition.match(/\r/)
-      definition = Def.find_or_initialize_by(def: definition, entry_id: entry.id, kanji_id: kanji.id)
-      puts "DEF: #{c} #{kanji.kanji} #{definition.def}" if c%500 == 0
-      definition.save!
-    end
+    #defs  = definitions.split("/")
+    # defs.each do |definition|
+    #   next if definition.match(/\r/)
+    #   definition = Def.find_or_initialize_by(def: definition, entry_id: entry.id, kanji_id: kanji.id)
+    #   puts "DEF: #{c} #{kanji.kanji} #{definition.def}" if c%500 == 0
+    #   definition.save!
+    # end
   end
 end
 

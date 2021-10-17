@@ -6,8 +6,6 @@ class CreateTenses < ActiveRecord::Migration[6.0]
       t.integer :tiempo_id
       t.integer :lng_id
       t.integer :priority
-
-      t.timestamps
     end
     add_index :tenses, :tense
     add_index :tenses, :mood_id

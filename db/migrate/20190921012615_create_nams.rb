@@ -9,7 +9,8 @@ class CreateNams < ActiveRecord::Migration[6.0]
       t.string :episode
       t.string :upldr
       t.string :title
-
+      t.string :pad_start
+      t.string :pad_end
       t.timestamps
     end
     add_index :nams, :nam
