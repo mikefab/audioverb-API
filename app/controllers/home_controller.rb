@@ -33,6 +33,7 @@ class HomeController < ApplicationController
     tense_id = Tense.where(tense: params[:tense]).first.id
     verb_id = Verb.where(verb: params[:verb]).first.id
     conjugations = Cla.where(tense_id: tense_id, verb_id: verb_id)
+    puts "cccc ... #{conjugations}"
     render json: conjugations.map{ |e|  e[:cla]}
 
     #if Rails.cache.exist?("conjugation-#{params[:conjugation]}")

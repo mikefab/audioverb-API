@@ -1,6 +1,6 @@
 class Tense < ApplicationRecord
   #attr_accessible :lng_id, :mood_id, :priority, :tense, :tiempo_id
-
+	belongs_to :mood
 	def self.return_tense_verbs(tense_id,native_id)
 	  if Rails.cache.read("tense_native-#{tense_id}#{native_id}")
 
@@ -31,18 +31,23 @@ class Tense < ApplicationRecord
     if Rails.cache.exist?(title) then
      return Rails.cache.read(title)
     else
-      tenses=Hash.new()
+      moods=Hash.new()
       # Cla.where(lng_id: lng_id).each do |c|
       #   tenses[Tense.find(c.tense_id).tense]=1
       # end
 			ActiveRecord::Migration.execute("select distinct tense_id from clas where lng_id=#{lng_id}").each do |id|
-				ActiveRecord::Migration.execute("select tense from tenses where id=#{id[0]}").each do |tense|
-        	tenses[tense]=1
+				ActiveRecord::Migration.execute("select mood, tense from tenses join moods on tenses.mood_id = moods.id where tenses.id=#{id[0]}").each do |mood, tense|
+					print "#{mood}-#{tense} !!!"
+        	if moods[mood] then
+						moods[mood] << tense
+					else
+						moods[mood] = [tense]
+					end
 				end
 	    end
 
-     Rails.cache.write(title,tenses)
-      return tenses
+     Rails.cache.write(title,moods)
+      return moods
      end
   end
 end

@@ -4,7 +4,7 @@ class Cla < ApplicationRecord
    #has_and_belongs_to_many :lngs, :join_table => "clas_lngs"
    belongs_to :lng
    has_and_belongs_to_many :caps, :join_table => "caps_clas"
-   has_and_belongs_to_many :nams, :join_table => "clas_nams"
+   #has_and_belongs_to_many :nams, :join_table => "clas_nams"
    belongs_to :verb
    belongs_to :tense
 

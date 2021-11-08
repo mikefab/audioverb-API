@@ -8,7 +8,7 @@ class TensesController < ApplicationController
       # get all tenses for selected native language
       # For now just test against English
       @native_tenses = Tense.tenses(lng_id)
-      render json: Rails.cache.fetch("tenses-#{params[:language]}", :expires_in => 3.days){ @native_tenses.keys }
+      render json: Rails.cache.fetch("tenses-#{params[:language]}", :expires_in => 3.days){ @native_tenses }
     end
   end
 end

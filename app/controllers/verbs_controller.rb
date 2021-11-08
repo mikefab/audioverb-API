@@ -16,16 +16,18 @@ class VerbsController < ApplicationController
   end
 
   def conjugations
-    if Rails.cache.exist?("conjugations-#{params[:verb]}")
-      render json: Rails.cache.read("conjugations-#{params[:verb]}")
+    lng_id = Lng.where(lng: params[:language]).first.id
+    puts "#{lng_id} ...ddd"
+    if Rails.cache.exist?("conjugations-#{lng_id}-#{params[:verb]}")
+      render json: Rails.cache.read("conjugations-#{lng_id}-#{params[:verb]}")
     else
       # get all tenses for selected native language
       # For now just test against English
 
-      @conjugations = Verb.where(verb: params[:verb]).first.clas.map do | c |
+      @conjugations = Verb.where(lng_id: lng_id, verb: params[:verb]).first.clas.map do | c |
         c.cla
       end
-      render json: Rails.cache.fetch("conjugations-#{params[:verb]}", :expires_in => 3.days){ @conjugations.uniq }
+      render json: Rails.cache.fetch("conjugations-#{lng_id}-#{params[:verb]}", :expires_in => 3.days){ @conjugations.uniq }
     end
   end
 

@@ -20,6 +20,7 @@ class NamsController < ApplicationController
 
   def verbs_for_nam
     nam  = params[:nam]
+
     if Rails.cache.exist?("verbs_for_nam-#{nam}")
       render json: Rails.cache.read("verbs_for_nam-#{nam}")
     else
@@ -27,6 +28,7 @@ class NamsController < ApplicationController
       Nam.find_by_nam(nam).caps.each do |cap|
         #cap.clas { |cla| puts cla.verb_id}
         cap.clas.each do |cla|
+          puts cla.cla
           verb = Verb.find(cla.verb_id)
            #h[verb.verb] = h[verb.verb] ? h[verb.verb] + 1 : 1
 
@@ -100,7 +102,7 @@ class NamsController < ApplicationController
     search = params[:search]
     is_idiom = params[:is_idiom]
     lng_id = Lng.where(cod: params[:lng]).first.id
-
+    print(Nam.to_flare(search, lng_id, is_idiom))
     if Rails.cache.exist?("search-#{lng_id}-#{search}")
       render json: Rails.cache.read("search-#{lng_id}-#{search}")
     else

@@ -57,7 +57,6 @@ class Nam < ApplicationRecord
     #self.caps.search(search, :match_mode=>:phrase, :per_page=>3)
     #self.caps.search('"'+ search + '"', :per_page => 25, :match_mode => :extended)
     term = is_idiom ? Ido.where(ido: search).first.pattern.gsub('<<', 'NEAR/1') : search
-    puts "#{term} ... ttt"
     self.caps.search "#{term}", :per_page => 25
     #self.caps.search('"'+ search + '"', :per_page => 25)
   end
@@ -92,6 +91,7 @@ class Nam < ApplicationRecord
     h = {name: 'flare', size: 1000, children: []}
     dramas = {}
     nams.each do |n|
+      
       caps = n.get_caps_by_search(term, is_idiom).map{ |i| {
         nam: i.nam.nam.gsub(/\s+/, '.'),
         num: i.num,

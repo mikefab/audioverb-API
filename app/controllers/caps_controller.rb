@@ -1,6 +1,7 @@
 class CapsController < ApplicationController
 
   def cap_by_nam_num
+    print "#{request.query_parameters} dddd"
     if params['nam'].match(/\d+_\d+x\d+/)
       name = params[:nam].gsub(/_/,'.')
       name.sub!(/(.*)\./, '\1_')
