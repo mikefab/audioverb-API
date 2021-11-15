@@ -130,7 +130,7 @@ class NamsController < ApplicationController
 
   def list
     lng_id = Lng.where(lng: params[:language]).first.id
-    render json: Nam.where(lng_id: lng_id).order(:created_at).reverse
+    render json: Nam.where(lng_id: lng_id)
     # puts "list-#{params[:language]} !!!"
     # if Rails.cache.exist?("list-#{params[:language]}")
     #   render json: Rails.cache.read("list-#{params[:language]}")

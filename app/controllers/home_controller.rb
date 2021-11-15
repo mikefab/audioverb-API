@@ -5,7 +5,6 @@ class HomeController < ApplicationController
 
   # Not sure if this is still used
   def grams
-    puts params
     gram_type = params[:gram].match(/monogram/) ? 1 : 2
     render json: Voc.grams(gram_type, 'all')
   end
@@ -19,12 +18,17 @@ class HomeController < ApplicationController
   end
 
   def tense #User has clicked on a tense in the noframes tense page
-    englishId = Lng.where(lng: 'english').first.id
-    if Rails.cache.exist?("tense-#{params[:tense]}")
-      render json: Rails.cache.read("tense-#{params[:tense]}")
+    tense = params[:tense]
+    language = params[:language]
+    lng_id = Lng.where(lng: language).first.id
+    mood = Mood.where(mood: params[:mood], lng_id: lng_id).first
+
+
+    if Rails.cache.exist?("tense-#{mood.mood}-#{tense}")
+      render json: Rails.cache.read("tense-#{mood.mood}-#{tense}")
     else
-      verbs = Tense.return_tense_verbs(Tense.where(tense: "#{params[:tense]}").first.id, englishId)
-      render json: Rails.cache.fetch("tense-#{params[:tense]}", :expires_in => 3.days){ verbs }
+      verbs = Tense.tense_verbs(Tense.where(tense: tense, mood_id: mood.id ).first.id)
+      render json: Rails.cache.fetch("tense-#{mood.mood}-#{tense}", :expires_in => 3.days){ verbs }
     end
   end
 
@@ -33,7 +37,6 @@ class HomeController < ApplicationController
     tense_id = Tense.where(tense: params[:tense]).first.id
     verb_id = Verb.where(verb: params[:verb]).first.id
     conjugations = Cla.where(tense_id: tense_id, verb_id: verb_id)
-    puts "cccc ... #{conjugations}"
     render json: conjugations.map{ |e|  e[:cla]}
 
     #if Rails.cache.exist?("conjugation-#{params[:conjugation]}")
