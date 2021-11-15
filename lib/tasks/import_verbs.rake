@@ -7,6 +7,7 @@ task :import_verbs => [:environment] do
   language= Lng.where(cod: ENV['cod']).first.lng
   ActiveRecord::Migration.execute("delete from verbs where lng_id=#{language_id};")
   ActiveRecord::Migration.execute("delete from cons where lng_id=#{language_id};")
+  ActiveRecord::Migration.execute("delete from moods where lng_id=#{language_id};")
   basedir = Rails.root.to_s + "/lib/text_files/verbs"
   file = File.new(basedir +"/#{language}_verbs.txt", "r")
   language = Lng.find(language_id)
@@ -54,7 +55,7 @@ task :import_verbs => [:environment] do
       verb = nil
     end
     if verb then
-      
+
       if pronoun then
         pronoun = "eles:elas:vocês:se"  if pronoun.match(/^eles$/)
         pronoun = "ele:ela:você:se" if pronoun.match(/^ele$/)
@@ -87,10 +88,9 @@ task :import_verbs => [:environment] do
   stored_tenses=Hash.new()
   tenses.each do |k,v|
     (mood,tense) = k.split("*")
-
     # if tense_p[tense] then
       t =  Tense.where(tense: tense, mood_id: stored_moods[mood], lng_id: language_id).first
-      t =  Tense.new(:tense=>"#{tense}", :lng_id=>language_id,:mood_id=>stored_moods[mood], :priority=>tense_p[tense]).save if !t
+      t =  Tense.new(tense: tense, lng_id: language_id,mood_id: stored_moods[mood], :priority=>tense_p[tense]).save if !t
       t =  Tense.where(tense: tense, mood_id: stored_moods[mood], lng_id: language_id).first
       stored_tenses["#{mood}-#{tense}"]= t.id
     # end
@@ -118,7 +118,7 @@ task :import_verbs => [:environment] do
      #print "#{temp_conjugation}-\n"
      if !conjugation.match(/<img src/) then
        #print "insert into cons (con,verb_id,mood_id,tense_id,lng_id,pronoun) values('#{temp_conjugation}',#{verb_id},#{mood_id},#{tense_id},#{language_id},'#{pronoun}');"
-       ActiveRecord::Migration.execute("insert into cons (con,verb_id,mood_id,tense_id,lng_id,pronoun) values('#{temp_conjugation}',#{verb_id},#{mood_id},#{tense_id},#{language_id},'#{pronoun}');")
+       ActiveRecord::Migration.execute("insert into cons (con,verb_id,mood_id,tense_id,lng_id,pronoun) values(\"#{temp_conjugation}\",#{verb_id},#{mood_id},#{tense_id},#{language_id},\"#{pronoun}\");")
      end
     end
   end
