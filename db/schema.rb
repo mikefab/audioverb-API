@@ -220,8 +220,6 @@ ActiveRecord::Schema.define(version: 2021_09_30_211834) do
     t.string "title"
     t.string "pad_start"
     t.string "pad_end"
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
     t.index ["episode"], name: "index_nams_on_episode"
     t.index ["lng_id"], name: "index_nams_on_lng_id"
     t.index ["nam"], name: "index_nams_on_nam"
