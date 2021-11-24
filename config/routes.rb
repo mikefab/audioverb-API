@@ -8,9 +8,9 @@ Rails.application.routes.draw do
         resources :items
       end
     end
-  get 'languages'                => 'lngs#languages'
-  get 'yu/:kind'                => 'entries#yu'
-  get 'yu/:kind/media/:media'                => 'entries#yu_by_media'
+  get 'languages' => 'lngs#languages'
+  get 'yu/:kind' => 'entries#yu'
+  get 'yu/:kind/media/:media' => 'entries#yu_by_media'
   # get 'duanyu/:language                => 'entries#duanyu'
   # get 'duanyu/media/:media'                => 'entries#duanyu_by_media'
 
@@ -38,8 +38,9 @@ Rails.application.routes.draw do
   get 'search/:lng/:search'                    => 'nams#search'
 #  get 'tenses/:language/:media'                => 'home#tenses'
   get 'tenses/:language'                => 'tenses#tenses'
-  get 'mood/:mood/tense/:tense'                           => 'home#tense'
-  get 'tense/:tense/verb/:verb'                => 'home#conjugation'
+  get 'language/:language/mood/:mood/tense/:tense/verb/:verb' => 'verbs#conjugation'
+  get 'mood/:mood/tense/:tense' => 'tenses#tense'
+
   get 'search/caps/:lng/:search/:nam'          => 'nams#search_caps_nam'
   get 'combine'                                => 'orders#combine' # for concating png and mp3 files on the fly
   get 'combine/:format/:source/:name/(/:num/):start/:stop.:extenstion' => 'orders#combine' # for concating png and mp3 files on the fly

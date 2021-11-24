@@ -15,6 +15,27 @@ class VerbsController < ApplicationController
     end
   end
 
+  def conjugation
+    lng = params[:language]
+    lng_id = Lng.where(lng: lng).first.id
+    tense_id = Tense.where(tense: params[:tense], lng_id: lng_id).first.id
+    verb_id = Verb.where(verb: params[:verb], lng_id: lng_id).first.id
+    puts tense_id
+    puts verb_id
+    conjugations = Cla.where(tense_id: tense_id, verb_id: verb_id)
+    #render json: conjugations.map{ |e|  e[:cla]}
+
+    if Rails.cache.exist?("conjugation-#{params[:conjugation]}")
+     render json: Rails.cache.read("conjugation-#{params[:conjugation]}")
+    else
+     #verbs = Tense.return_tense_verbs(Tense.where(tense: "#{params[:tense]}").first.id, englishId)
+     render json: Rails.cache.fetch("conjugation-#{params[:conjugation]}", :expires_in => 3.days) {
+       conjugations.map{ |e|  e[:cla]}
+
+     }
+    end
+  end
+
   def conjugations
     lng_id = Lng.where(lng: params[:language]).first.id
     puts "#{lng_id} ...ddd"

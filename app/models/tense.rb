@@ -1,6 +1,7 @@
 class Tense < ApplicationRecord
   #attr_accessible :lng_id, :mood_id, :priority, :tense, :tiempo_id
 	belongs_to :mood
+
 	def self.tense_verbs(tense_id)
 	  if Rails.cache.read("tense_#{tense_id}")
 	   return Rails.cache.read("tense_#{tense_id}")
@@ -10,7 +11,8 @@ class Tense < ApplicationRecord
         infinitive[c.verb.verb] = Array.new() if !infinitive[c.verb.verb]
         infinitive[c.verb.verb] << c.cla if infinitive[c.verb.verb]
       end
-	    return Rails.cache.fetch("tense_#{tense_id}", :expires_in =>3.days){infinitive}
+			puts infinitive
+	    return Rails.cache.fetch("tense_#{tense_id}", :expires_in =>3.days){ infinitive }
 	  end
 	end
 
