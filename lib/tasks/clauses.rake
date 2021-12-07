@@ -29,6 +29,7 @@ task :create_clauses => [:environment] do
     "como" => 1,
     "cuenta" => 1,
     "entre" => 1,
+    "de" => 1,
     "forma" => 1,
     "idea" => 1,
     "importa" => 1,
